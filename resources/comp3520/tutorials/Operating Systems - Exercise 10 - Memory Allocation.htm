@@ -1,0 +1,800 @@
+
+<!-- saved from url=(0066)http://rp-www.cs.usyd.edu.au/~comp3520/2012/Assgns/exercise10.html -->
+<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><!-- #BeginTemplate "/Templates/exercise.dwt" --><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+
+<meta name="ProgId" content="Word.Document">
+<meta name="Generator" content="Microsoft Word 11">
+<meta name="Originator" content="Microsoft Word 11">
+<link rel="File-List" href="http://rp-www.cs.usyd.edu.au/~comp3520/2012/Assgns/exercise10_files/filelist.xml">
+<link rel="Edit-Time-Data" href="http://rp-www.cs.usyd.edu.au/~comp3520/2012/Assgns/exercise10_files/editdata.mso">
+<!--[if !mso]>
+<style>
+v\:* {behavior:url(#default#VML);}
+o\:* {behavior:url(#default#VML);}
+w\:* {behavior:url(#default#VML);}
+.shape {behavior:url(#default#VML);}
+</style>
+<![endif]-->
+<title>Operating Systems - Exercise 10 - Memory Allocation</title>
+<!--[if gte mso 9]><xml>
+ <o:DocumentProperties>
+  <o:Author>School of Information Technologies</o:Author>
+  <o:LastAuthor>School of Information Technologies</o:LastAuthor>
+  <o:Revision>4</o:Revision>
+  <o:TotalTime>11</o:TotalTime>
+  <o:Created>2010-05-12T01:17:00Z</o:Created>
+  <o:LastSaved>2010-05-14T00:19:00Z</o:LastSaved>
+  <o:Pages>1</o:Pages>
+  <o:Words>1034</o:Words>
+  <o:Characters>5894</o:Characters>
+  <o:Company>University of Sydney - School of IT</o:Company>
+  <o:Lines>49</o:Lines>
+  <o:Paragraphs>13</o:Paragraphs>
+  <o:CharactersWithSpaces>6915</o:CharactersWithSpaces>
+  <o:Version>11.9999</o:Version>
+ </o:DocumentProperties>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:WordDocument>
+  <w:Zoom>125</w:Zoom>
+  <w:ValidateAgainstSchemas/>
+  <w:SaveIfXMLInvalid>false</w:SaveIfXMLInvalid>
+  <w:IgnoreMixedContent>false</w:IgnoreMixedContent>
+  <w:AlwaysShowPlaceholderText>false</w:AlwaysShowPlaceholderText>
+  <w:BrowserLevel>MicrosoftInternetExplorer4</w:BrowserLevel>
+ </w:WordDocument>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:LatentStyles DefLockedState="false" LatentStyleCount="156">
+ </w:LatentStyles>
+</xml><![endif]-->
+<link rel="Stylesheet" type="text/css" media="all" href="./Operating Systems - Exercise 10 - Memory Allocation_files/sans.css">
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:"Script MT Bold";
+	panose-1:3 4 6 2 4 6 7 8 9 4;
+	mso-font-charset:0;
+	mso-generic-font-family:script;
+	mso-font-pitch:variable;
+	mso-font-signature:3 0 0 0 1 0;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-parent:"";
+	margin:0cm;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+h1
+	{mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	mso-outline-level:1;
+	font-size:24.0pt;
+	font-weight:bold;}
+h2
+	{mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	mso-outline-level:2;
+	font-size:18.0pt;
+	font-weight:bold;}
+h3
+	{mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	mso-outline-level:3;
+	font-size:18.0pt;}
+h4
+	{mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	mso-outline-level:4;
+	font-size:13.5pt;
+	font-weight:bold;}
+a:link, span.MsoHyperlink
+	{color:navy;
+	text-decoration:underline;
+	text-underline:single;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:blue;
+	text-decoration:underline;
+	text-underline:single;}
+p
+	{mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	font-size:13.5pt;
+	mso-fareast-font-family:"Times New Roman";}
+code
+	{mso-fareast-font-family:"Times New Roman";}
+pre
+	{margin:0cm;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt;
+	font-size:13.5pt;
+	mso-fareast-font-family:"Times New Roman";
+	font-weight:bold;}
+tt
+	{mso-ansi-font-size:13.5pt;
+	mso-bidi-font-size:13.5pt;
+	mso-fareast-font-family:"Times New Roman";}
+p.script, li.script, div.script
+	{mso-style-name:script;
+	mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	font-size:13.5pt;
+	mso-fareast-font-family:"Times New Roman";}
+p.tinytext, li.tinytext, div.tinytext
+	{mso-style-name:tinytext;
+	mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	mso-fareast-font-family:"Times New Roman";}
+p.code, li.code, div.code
+	{mso-style-name:code;
+	mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	font-size:13.5pt;
+	mso-fareast-font-family:"Times New Roman";
+	font-weight:bold;}
+p.footertext, li.footertext, div.footertext
+	{mso-style-name:footertext;
+	mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	font-size:13.5pt;
+	mso-fareast-font-family:"Times New Roman";}
+p.unlink, li.unlink, div.unlink
+	{mso-style-name:unlink;
+	mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	font-size:13.5pt;
+	mso-fareast-font-family:"Times New Roman";}
+p.topred, li.topred, div.topred
+	{mso-style-name:topred;
+	mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	font-size:13.5pt;
+	mso-fareast-font-family:"Times New Roman";}
+p.set10pt, li.set10pt, div.set10pt
+	{mso-style-name:set10pt;
+	mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	mso-fareast-font-family:"Times New Roman";}
+p.super, li.super, div.super
+	{mso-style-name:super;
+	mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	mso-fareast-font-family:"Times New Roman";}
+p.sub, li.sub, div.sub
+	{mso-style-name:sub;
+	mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	mso-fareast-font-family:"Times New Roman";}
+p.bigo, li.bigo, div.bigo
+	{mso-style-name:bigo;
+	mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	font-size:18.0pt;
+	mso-fareast-font-family:"Times New Roman";
+	font-weight:bold;
+	font-style:italic;}
+p.justify, li.justify, div.justify
+	{mso-style-name:justify;
+	mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	text-align:justify;
+	mso-pagination:widow-orphan;
+	font-size:13.5pt;
+	mso-fareast-font-family:"Times New Roman";}
+p.red, li.red, div.red
+	{mso-style-name:red;
+	mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	font-size:13.5pt;
+	mso-fareast-font-family:"Times New Roman";}
+span.code1
+	{mso-style-name:code1;
+	mso-ansi-font-size:13.5pt;
+	mso-bidi-font-size:13.5pt;
+	font-family:"Courier New";
+	mso-ascii-font-family:"Courier New";
+	mso-hansi-font-family:"Courier New";
+	mso-bidi-font-family:"Courier New";
+	color:#CC00CC;
+	font-weight:bold;}
+@page Section1
+	{size:595.3pt 841.9pt;
+	margin:72.0pt 90.0pt 72.0pt 90.0pt;
+	mso-header-margin:35.4pt;
+	mso-footer-margin:35.4pt;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;}
+ /* List Definitions */
+ @list l0
+	{mso-list-id:1412313572;
+	mso-list-template-ids:1905033576;}
+@list l0:level1
+	{mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l0:level2
+	{mso-level-number-format:roman-lower;
+	mso-level-tab-stop:72.0pt;
+	mso-level-number-position:right;
+	text-indent:-18.0pt;}
+@list l0:level3
+	{mso-level-number-format:alpha-lower;
+	mso-level-tab-stop:108.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l0:level4
+	{mso-level-number-format:alpha-upper;
+	mso-level-tab-stop:144.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l0:level5
+	{mso-level-tab-stop:180.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l0:level6
+	{mso-level-tab-stop:216.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l0:level7
+	{mso-level-tab-stop:252.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l0:level8
+	{mso-level-tab-stop:288.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l0:level9
+	{mso-level-tab-stop:324.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+ol
+	{margin-bottom:0cm;}
+ul
+	{margin-bottom:0cm;}
+-->
+</style>
+<!--[if gte mso 10]>
+<style>
+ /* Style Definitions */
+ table.MsoNormalTable
+	{mso-style-name:"Table Normal";
+	mso-tstyle-rowband-size:0;
+	mso-tstyle-colband-size:0;
+	mso-style-noshow:yes;
+	mso-style-parent:"";
+	mso-padding-alt:0cm 5.4pt 0cm 5.4pt;
+	mso-para-margin:0cm;
+	mso-para-margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:"Times New Roman";
+	mso-ansi-language:#0400;
+	mso-fareast-language:#0400;
+	mso-bidi-language:#0400;}
+</style>
+<![endif]--><!-- #BeginEditable "doctitle" --><!-- #EndEditable -->
+<meta name="DC.Creator" content="Dr Ian G Graham, Griffith University, Gold Coast, Queensland, Australia">
+<meta name="DC.Date.created" content="2003-12-01">
+<meta name="DC.Title" content="Exercise/Tutorial Page">
+<meta name="DC.Subject" content="Operating Systems; Instructor resource; Projects; Exercises">
+<meta name="DC.Description" content="This page contains exercises for the instructors resource supporting the text book: Operating Systems by William Stallings, 5th edition, Prentice-Hall, 2004">
+<meta name="DC.Identifier" content="TBA">
+<meta name="DC.Publisher" content="Prentice Hall">
+<meta name="DC.Format" scheme="IMT" content="text/html">
+<meta name="DC.Language" scheme="RFC3066" content="en">
+<meta name="subject" content="Operating Systems - Exercises">
+<meta name="keywords" content="Operating Systems, instructor, project, exercise, reference">
+<meta name="robots" content="NOINDEX">
+<link rel="shortcut icon" href="http://rp-www.cs.usyd.edu.au/~comp3520/2012/Assgns/favicon.gif">
+<!--[if gte mso 9]><xml>
+ <o:shapedefaults v:ext="edit" spidmax="4098"/>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapelayout v:ext="edit">
+  <o:idmap v:ext="edit" data="1"/>
+ </o:shapelayout></xml><![endif]-->
+</head>
+
+<body bgcolor="white" lang="EN-AU" link="navy" vlink="blue" style="tab-interval:36.0pt" youdao="bind">
+
+<div class="Section1">
+
+<table class="MsoNormalTable" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100.0%;mso-cellspacing:0cm;mso-padding-alt:0cm 0cm 0cm 0cm">
+ <tbody><tr style="mso-yfti-irow:0;mso-yfti-firstrow:yes;mso-yfti-lastrow:yes">
+  <td width="23" style="width:17.25pt;padding:0cm 0cm 0cm 0cm">
+  <p class="MsoNormal"><span style="font-size:13.5pt;font-family:Arial;
+  color:black"><a href="http://rp-www.cs.usyd.edu.au/~comp3520/2012/Assgns/index.html"></a><o:p></o:p></span></p>
+  </td>
+  <td width="100%" style="width:100.0%;padding:0cm 0cm 0cm 0cm"><!-- #BeginLibraryItem "/Library/DividingLine.lbi" -->
+  <p class="MsoNormal"><a name="top"></a><span style="font-size:13.5pt;font-family:
+  Arial;color:black"><img border="0" width="721" height="17" id="_x0000_i1025" src="./Operating Systems - Exercise 10 - Memory Allocation_files/red.gif"><o:p></o:p></span></p>
+  </td>
+ </tr>
+<!-- #EndLibraryItem -->
+</tbody></table>
+
+<h1 align="center" style="text-align:center"><span style="color:black">COMP3520
+Operating System Internals - Exercises<!-- #EndLibraryItem --> <o:p></o:p></span></h1>
+
+<h2 align="center" style="text-align:center"><span style="color:black"><!-- #EndLibraryItem --><!-- #BeginEditable "heading" -->Exercise
+10 - Memory Allocation<o:p></o:p></span></h2>
+
+<!-- #EndEditable -->
+
+<div align="center">
+
+<table class="MsoNormalTable" border="0" cellspacing="0" cellpadding="0" width="95%" style="width:95.0%;mso-cellspacing:0cm;mso-padding-alt:0cm 0cm 0cm 0cm">
+ <tbody><tr style="mso-yfti-irow:0;mso-yfti-firstrow:yes;mso-yfti-lastrow:yes">
+  <td style="padding:0cm 0cm 0cm 0cm"><!-- #BeginEditable "body" -->
+  <p><span style="color:black">The various methods of dynamic segment
+  partitioning are described in Stallings chapter 7.<o:p></o:p></span></p>
+  <p><span style="color:black">If you wish to implement Best Fit, First Fit,
+  Next Fit, or Worst Fit memory allocation policy, it is probably best to do
+  this by describing the memory as a structure in a linked list:<o:p></o:p></span></p>
+  <blockquote style="margin-top:5.0pt;margin-bottom:5.0pt"><pre>struct mab {</pre><pre><span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp; </span>int offset;</pre><pre><span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp; </span>int size;</pre><pre><span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp; </span>int allocated;</pre><pre><span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp; </span>struct mab * next;</pre><pre><span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp; </span>struct mab * prev;</pre><pre>};</pre><pre><o:p>&nbsp;</o:p></pre><pre>typedef struct mab Mab;</pre><pre>typedef Mab * MabPtr; </pre><pre><span style="mso-spacerun:yes">&nbsp;</span></pre></blockquote>
+  <p style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt"><span style="color:black">For the Buddy system, you will need to implement this structure
+  as the node for a Tree with Right and Left pointers.<o:p></o:p></span></p>
+  <p style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt"><span style="color:black">Either way, the following set of prototypes give a guide
+  as to the functionality you will need to provide:<o:p></o:p></span></p>
+  <blockquote style="margin-top:5.0pt;margin-bottom:5.0pt">
+  <p class="code" style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt">MabPtr
+  memChk(MabPtr m, int size);&nbsp; &nbsp;// check if memory available<br>
+  MabPtr memAlloc(MabPtr m, int size);&nbsp;// allocate memory block<br>
+  MabPtr memFree(MabPtr
+  m);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//
+  free memory block<br>
+  &nbsp;<br>
+  MabPtr memMerge(MabPtr
+  m);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// merge
+  two memory blocks<br>
+  MabPtr memSplit(MabPtr m, int size);&nbsp;// split a memory block</p>
+  </blockquote>
+  <p style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt"><span style="color:black">Allocating memory is a process of finding a block of
+  'free' memory big enough to hold the requested memory block. The free block
+  is then split (if necessary) with the right size block marked as 'allocated'
+  and the remaining block (if any) marked as 'free'.<o:p></o:p></span></p>
+  <p style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt"><span style="color:black">Freeing a memory block is done by changing the flag on
+  the block to 'free'. After this the blocks on both sides of the newly 'freed'
+  block are examined. If either (or both of them are 'free') the 'free' blocks
+  must be merged together to form just one 'free' block.<o:p></o:p></span></p>
+  <p style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt"><span style="color:black">The </span><span class="code1">mab</span><span style="color:black"> structure above has been constructed with a reverse link
+  as well as a forward link. This makes it easier to check for adjacent
+  unallocated blocks that need to be merged when freeing up a memory block.
+  Without the reverse link, you will need to do a separate pass through the
+  memory arena after marking a block as free to merge any adjacent free blocks.<o:p></o:p></span></p>
+  <p style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt"><span style="color:black">You can make up your own test program or go directly to
+  implementing the routines in your Feedback dispatcher. For this you will need
+  to insert a separate queue in between the input queue and the Feedback queues
+  as indicated in the assignment 2 specification.<o:p></o:p></span></p>
+  <p style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt"><span style="color:black">Implementing the extra stage, processes are passed from
+  the input queue (Job Dispatch List) to the Feedback pending queue (User Job
+  Queue) when they have "arrived". They are dequeued and enlisted on
+  the appropriate Feedback queue when sufficient memory is available for them
+  in the memory arena - the memory is allocated when they are enqueued and
+  deallocated when they are terminated.<o:p></o:p></span></p>
+  <p style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt"><span style="color:black">The modified logic (highlighted in </span><span style="color:#CC0000">red</span><span style="color:black">) will be:<o:p></o:p></span></p>
+  <blockquote style="margin-top:5.0pt;margin-bottom:5.0pt">
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:36.0pt;text-indent:-18.0pt;mso-list:l0 level1 lfo2;tab-stops:
+  list 36.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:
+  Arial;mso-fareast-font-family:Arial;color:black"><span style="mso-list:Ignore">1.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;font-family:Arial;color:black">Initialize
+  dispatcher queues (input queue, user job queue, and feedback queues);<o:p></o:p></span></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:36.0pt;text-indent:-18.0pt;mso-list:l0 level1 lfo2;tab-stops:
+  list 36.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:
+  Arial;mso-fareast-font-family:Arial;color:black"><span style="mso-list:Ignore">2.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;font-family:Arial;color:black">Fill
+  input queue from dispatch list file;<o:p></o:p></span></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:36.0pt;text-indent:-18.0pt;mso-list:l0 level1 lfo2;tab-stops:
+  list 36.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:
+  Arial;mso-fareast-font-family:Arial;color:black"><span style="mso-list:Ignore">3.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;font-family:Arial;color:black">Start
+  dispatcher timer (</span></span><span class="code1"><span style="font-size:
+  13.5pt">dispatcher timer = 0</span></span><span style="font-size:13.5pt;
+  font-family:Arial;color:black">);<o:p></o:p></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:36.0pt;text-indent:-18.0pt;mso-list:l0 level1 lfo2;tab-stops:
+  list 36.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:
+  Arial;mso-fareast-font-family:Arial;color:black"><span style="mso-list:Ignore">4.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;font-family:Arial;color:black">While
+  there's anything in any of the queues or there is a currently running
+  process: <o:p></o:p></span></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:72.0pt;text-indent:-72.0pt;mso-text-indent-alt:-18.0pt;
+  mso-list:l0 level2 lfo2;tab-stops:list 72.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:Arial;mso-fareast-font-family:Arial;
+  color:black"><span style="mso-list:Ignore"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>i.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;
+  font-family:Arial;color:black">Unload pending processes from the input queue:<br>
+  While (</span></span><span class="code1"><span style="font-size:13.5pt">head-of-input-queue.arrival-time
+  &lt;= dispatcher timer</span></span><span style="font-size:13.5pt;font-family:
+  Arial;color:black">)<br>
+  dequeue process from input queue and enqueue on </span><span style="font-size:13.5pt;font-family:Arial;color:#CC0000">user job queue</span><span style="font-size:13.5pt;font-family:Arial;color:black">;<o:p></o:p></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:72.0pt;text-indent:-72.0pt;mso-text-indent-alt:-18.0pt;
+  mso-list:l0 level2 lfo2;tab-stops:list 72.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:Arial;mso-fareast-font-family:Arial;
+  color:black"><span style="mso-list:Ignore"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>ii.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;
+  font-family:Arial;color:#CC0000">Unload pending processes from the user job
+  queue:<br>
+  While (</span></span><span class="code1"><span style="font-size:13.5pt">head-of-user-job-queue.mbytes</span></span><span style="font-size:13.5pt;font-family:Arial;color:#CC0000"> can be allocated)<br>
+  dequeue process from user job queue, allocate memory to the process and
+  enqueue on highest priority feedback queue (assigning it the appropriate
+  priority);</span><span style="font-size:13.5pt;font-family:Arial;color:black"><o:p></o:p></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:72.0pt;text-indent:-72.0pt;mso-text-indent-alt:-18.0pt;
+  mso-list:l0 level2 lfo2;tab-stops:list 72.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:Arial;mso-fareast-font-family:Arial;
+  color:black"><span style="mso-list:Ignore"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>iii.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;
+  font-family:Arial;color:black">If a process is currently running: <o:p></o:p></span></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:108.0pt;text-indent:-18.0pt;mso-list:l0 level3 lfo2;tab-stops:
+  list 108.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:
+  Arial;mso-fareast-font-family:Arial;color:black"><span style="mso-list:Ignore">a.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;font-family:Arial;color:black">Decrement
+  process </span></span><span class="code1"><span style="font-size:13.5pt">remainingcputime</span></span><span style="font-size:13.5pt;font-family:Arial;color:black">;<o:p></o:p></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:108.0pt;text-indent:-18.0pt;mso-list:l0 level3 lfo2;tab-stops:
+  list 108.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:
+  Arial;mso-fareast-font-family:Arial;color:black"><span style="mso-list:Ignore">b.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;font-family:Arial;color:black">If times
+  up: <o:p></o:p></span></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:144.0pt;text-indent:-18.0pt;mso-list:l0 level4 lfo2;tab-stops:
+  list 144.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:
+  Arial;mso-fareast-font-family:Arial;color:black"><span style="mso-list:Ignore">A.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp; </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;font-family:Arial;color:black">Send </span></span><span class="code1"><span style="font-size:13.5pt">SIGINT</span></span><span style="font-size:13.5pt;font-family:Arial;color:black"> to the process to
+  terminate it;<o:p></o:p></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:144.0pt;text-indent:-18.0pt;mso-list:l0 level4 lfo2;tab-stops:
+  list 144.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:
+  Arial;mso-fareast-font-family:Arial;color:black"><span style="mso-list:Ignore">B.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp; </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;font-family:Arial;color:#CC0000">Free
+  memory allocated to the process;</span></span><span style="font-size:13.5pt;
+  font-family:Arial;color:black"><o:p></o:p></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:144.0pt;text-indent:-18.0pt;mso-list:l0 level4 lfo2;tab-stops:
+  list 144.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:
+  Arial;mso-fareast-font-family:Arial;color:black"><span style="mso-list:Ignore">C.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp; </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;font-family:Arial;color:black">Free up
+  process structure memory;<o:p></o:p></span></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:108.0pt;text-indent:-18.0pt;mso-list:l0 level3 lfo2;tab-stops:
+  list 108.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:
+  Arial;mso-fareast-font-family:Arial;color:black"><span style="mso-list:Ignore">c.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;font-family:Arial;color:black">else if
+  other processes are waiting in any of the feedback queues: <o:p></o:p></span></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:144.0pt;text-indent:-18.0pt;mso-list:l0 level4 lfo2;tab-stops:
+  list 144.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:
+  Arial;mso-fareast-font-family:Arial;color:black"><span style="mso-list:Ignore">A.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp; </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;font-family:Arial;color:black">Send </span></span><span class="code1"><span style="font-size:13.5pt">SIGTSTP</span></span><span style="font-size:13.5pt;font-family:Arial;color:black"> to suspend it;<o:p></o:p></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:144.0pt;text-indent:-18.0pt;mso-list:l0 level4 lfo2;tab-stops:
+  list 144.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:
+  Arial;mso-fareast-font-family:Arial;color:black"><span style="mso-list:Ignore">B.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp; </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;font-family:Arial;color:black">Reduce
+  the priority of the process (if possible) and enqueue it on the appropriate
+  feedback queue<o:p></o:p></span></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:72.0pt;text-indent:-72.0pt;mso-text-indent-alt:-18.0pt;
+  mso-list:l0 level2 lfo2;tab-stops:list 72.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:Arial;mso-fareast-font-family:Arial;
+  color:black"><span style="mso-list:Ignore"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>iv.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;
+  font-family:Arial;color:black">If no process currently running &amp;&amp;
+  feedback queues are not all empty: <o:p></o:p></span></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:108.0pt;text-indent:-18.0pt;mso-list:l0 level3 lfo2;tab-stops:
+  list 108.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:
+  Arial;mso-fareast-font-family:Arial;color:black"><span style="mso-list:Ignore">a.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;font-family:Arial;color:black">Dequeue
+  a process from the highest priority feedback queue that is not empty<o:p></o:p></span></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:108.0pt;text-indent:-18.0pt;mso-list:l0 level3 lfo2;tab-stops:
+  list 108.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:
+  Arial;mso-fareast-font-family:Arial;color:black"><span style="mso-list:Ignore">b.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;font-family:Arial;color:black">If
+  already started but suspended, restart it (send </span></span><span class="code1"><span style="font-size:13.5pt">SIGCONT</span></span><span style="font-size:13.5pt;font-family:Arial;color:black"> to it)<br>
+  else start it (</span><span class="code1"><span style="font-size:13.5pt">fork</span></span><span style="font-size:13.5pt;font-family:Arial;color:black"> &amp; </span><span class="code1"><span style="font-size:13.5pt">exec</span></span><span style="font-size:13.5pt;font-family:Arial;color:black">)<o:p></o:p></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:108.0pt;text-indent:-18.0pt;mso-list:l0 level3 lfo2;tab-stops:
+  list 108.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:
+  Arial;mso-fareast-font-family:Arial;color:black"><span style="mso-list:Ignore">c.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;font-family:Arial;color:black">Set it
+  as currently running process;<o:p></o:p></span></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:72.0pt;text-indent:-72.0pt;mso-text-indent-alt:-18.0pt;
+  mso-list:l0 level2 lfo2;tab-stops:list 72.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:Arial;mso-fareast-font-family:Arial;
+  color:black"><span style="mso-list:Ignore"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>v.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span></span></span><!--[endif]--><span dir="LTR"><span class="code1"><span style="font-size:13.5pt">sleep</span></span></span><span style="font-size:
+  13.5pt;font-family:Arial;color:black"> for one second;<o:p></o:p></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:72.0pt;text-indent:-72.0pt;mso-text-indent-alt:-18.0pt;
+  mso-list:l0 level2 lfo2;tab-stops:list 72.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:Arial;mso-fareast-font-family:Arial;
+  color:black"><span style="mso-list:Ignore"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>vi.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;
+  font-family:Arial;color:black">Increment dispatcher timer;<o:p></o:p></span></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:72.0pt;text-indent:-72.0pt;mso-text-indent-alt:-18.0pt;
+  mso-list:l0 level2 lfo2;tab-stops:list 72.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:Arial;mso-fareast-font-family:Arial;
+  color:black"><span style="mso-list:Ignore"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>vii.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;
+  font-family:Arial;color:black">Go back to 4.<o:p></o:p></span></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:36.0pt;text-indent:-18.0pt;mso-list:l0 level1 lfo2;tab-stops:
+  list 36.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:
+  Arial;mso-fareast-font-family:Arial;color:black"><span style="mso-list:Ignore">5.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;font-family:Arial;color:black">Exit. <o:p></o:p></span></span></p>
+  </blockquote>
+  <p style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt"><span style="color:black">or something like that!<o:p></o:p></span></p>
+  <p style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt"><span style="color:black">Try this with the following job list with a quantum of 1 sec
+  and available memory of 1024 Mbyte:<o:p></o:p></span></p>
+  <blockquote style="margin-top:5.0pt;margin-bottom:5.0pt">
+  <p class="code" style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt">0,
+  1, 1, 192, 0, 0, 0, 0<br>
+  0, 1, 3, 32, 0, 0, 0, 0<br>
+  0, 1, 1, 416, 0, 0, 0, 0<br>
+  0, 1, 3, 32, 0, 0, 0, 0<br>
+  0, 1, 1, 160, 0, 0, 0, 0<br>
+  0, 1, 3, 128, 0, 0, 0, 0<br>
+  7, 1, 2, 108, 0, 0, 0, 0<br>
+  7, 1, 2, 256, 0, 0, 0, 0<br>
+  7, 1, 2, 80, 0, 0, 0, 0</p>
+  </blockquote>
+  <p style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt"><span style="color:black">This interesting mixture should run processes 0-5 in the
+  first 6 seconds and leave the memory arena as:<o:p></o:p></span></p>
+  <blockquote style="margin-top:5.0pt;margin-bottom:5.0pt">
+  <table class="MsoNormalTable" border="0" cellspacing="0" cellpadding="0" style="mso-cellspacing:0cm;mso-padding-alt:2.25pt 2.25pt 2.25pt 2.25pt">
+   <tbody><tr style="mso-yfti-irow:0;mso-yfti-firstrow:yes">
+    <td style="padding:2.25pt 2.25pt 2.25pt 2.25pt">
+    <p class="MsoNormal" align="center" style="text-align:center"><b><span style="font-size:13.5pt;font-family:Arial;color:black">&nbsp;&nbsp;offset&nbsp;&nbsp;<o:p></o:p></span></b></p>
+    </td>
+    <td style="padding:2.25pt 2.25pt 2.25pt 2.25pt">
+    <p class="MsoNormal" align="center" style="text-align:center"><b><span style="font-size:13.5pt;font-family:Arial;color:black">&nbsp;&nbsp;&nbsp;&nbsp;size&nbsp;&nbsp;&nbsp;&nbsp;<o:p></o:p></span></b></p>
+    </td>
+    <td style="padding:2.25pt 2.25pt 2.25pt 2.25pt">
+    <p class="MsoNormal" align="center" style="text-align:center"><b><span style="font-size:13.5pt;font-family:Arial;color:black">&nbsp;&nbsp;allocated&nbsp;&nbsp;<o:p></o:p></span></b></p>
+    </td>
+   </tr>
+   <tr style="mso-yfti-irow:1">
+    <td style="padding:2.25pt 2.25pt 2.25pt 2.25pt">
+    <p class="MsoNormal" align="center" style="text-align:center"><span style="font-size:13.5pt;font-family:Arial;color:black">0<o:p></o:p></span></p>
+    </td>
+    <td style="padding:2.25pt 2.25pt 2.25pt 2.25pt">
+    <p class="MsoNormal" align="center" style="text-align:center"><span style="font-size:13.5pt;font-family:Arial;color:black">192<o:p></o:p></span></p>
+    </td>
+    <td style="padding:2.25pt 2.25pt 2.25pt 2.25pt">
+    <p class="MsoNormal" align="center" style="text-align:center"><span style="font-size:13.5pt;font-family:Arial;color:black">FALSE<o:p></o:p></span></p>
+    </td>
+   </tr>
+   <tr style="mso-yfti-irow:2">
+    <td style="padding:2.25pt 2.25pt 2.25pt 2.25pt">
+    <p class="MsoNormal" align="center" style="text-align:center"><span style="font-size:13.5pt;font-family:Arial;color:black">192<o:p></o:p></span></p>
+    </td>
+    <td style="padding:2.25pt 2.25pt 2.25pt 2.25pt">
+    <p class="MsoNormal" align="center" style="text-align:center"><span style="font-size:13.5pt;font-family:Arial;color:black">32<o:p></o:p></span></p>
+    </td>
+    <td style="padding:2.25pt 2.25pt 2.25pt 2.25pt">
+    <p class="MsoNormal" align="center" style="text-align:center"><span style="font-size:13.5pt;font-family:Arial;color:black">TRUE<o:p></o:p></span></p>
+    </td>
+   </tr>
+   <tr style="mso-yfti-irow:3">
+    <td style="padding:2.25pt 2.25pt 2.25pt 2.25pt">
+    <p class="MsoNormal" align="center" style="text-align:center"><span style="font-size:13.5pt;font-family:Arial;color:black">224<o:p></o:p></span></p>
+    </td>
+    <td style="padding:2.25pt 2.25pt 2.25pt 2.25pt">
+    <p class="MsoNormal" align="center" style="text-align:center"><span style="font-size:13.5pt;font-family:Arial;color:black">416<o:p></o:p></span></p>
+    </td>
+    <td style="padding:2.25pt 2.25pt 2.25pt 2.25pt">
+    <p class="MsoNormal" align="center" style="text-align:center"><span style="font-size:13.5pt;font-family:Arial;color:black">FALSE<o:p></o:p></span></p>
+    </td>
+   </tr>
+   <tr style="mso-yfti-irow:4">
+    <td style="padding:2.25pt 2.25pt 2.25pt 2.25pt">
+    <p class="MsoNormal" align="center" style="text-align:center"><span style="font-size:13.5pt;font-family:Arial;color:black">640<o:p></o:p></span></p>
+    </td>
+    <td style="padding:2.25pt 2.25pt 2.25pt 2.25pt">
+    <p class="MsoNormal" align="center" style="text-align:center"><span style="font-size:13.5pt;font-family:Arial;color:black">32<o:p></o:p></span></p>
+    </td>
+    <td style="padding:2.25pt 2.25pt 2.25pt 2.25pt">
+    <p class="MsoNormal" align="center" style="text-align:center"><span style="font-size:13.5pt;font-family:Arial;color:black">TRUE<o:p></o:p></span></p>
+    </td>
+   </tr>
+   <tr style="mso-yfti-irow:5">
+    <td style="padding:2.25pt 2.25pt 2.25pt 2.25pt">
+    <p class="MsoNormal" align="center" style="text-align:center"><span style="font-size:13.5pt;font-family:Arial;color:black">672<o:p></o:p></span></p>
+    </td>
+    <td style="padding:2.25pt 2.25pt 2.25pt 2.25pt">
+    <p class="MsoNormal" align="center" style="text-align:center"><span style="font-size:13.5pt;font-family:Arial;color:black">160<o:p></o:p></span></p>
+    </td>
+    <td style="padding:2.25pt 2.25pt 2.25pt 2.25pt">
+    <p class="MsoNormal" align="center" style="text-align:center"><span style="font-size:13.5pt;font-family:Arial;color:black">FALSE<o:p></o:p></span></p>
+    </td>
+   </tr>
+   <tr style="mso-yfti-irow:6">
+    <td style="padding:2.25pt 2.25pt 2.25pt 2.25pt">
+    <p class="MsoNormal" align="center" style="text-align:center"><span style="font-size:13.5pt;font-family:Arial;color:black">832<o:p></o:p></span></p>
+    </td>
+    <td style="padding:2.25pt 2.25pt 2.25pt 2.25pt">
+    <p class="MsoNormal" align="center" style="text-align:center"><span style="font-size:13.5pt;font-family:Arial;color:black">128<o:p></o:p></span></p>
+    </td>
+    <td style="padding:2.25pt 2.25pt 2.25pt 2.25pt">
+    <p class="MsoNormal" align="center" style="text-align:center"><span style="font-size:13.5pt;font-family:Arial;color:black">TRUE<o:p></o:p></span></p>
+    </td>
+   </tr>
+   <tr style="mso-yfti-irow:7;mso-yfti-lastrow:yes">
+    <td style="padding:2.25pt 2.25pt 2.25pt 2.25pt">
+    <p class="MsoNormal" align="center" style="text-align:center"><span style="font-size:13.5pt;font-family:Arial;color:black">960<o:p></o:p></span></p>
+    </td>
+    <td style="padding:2.25pt 2.25pt 2.25pt 2.25pt">
+    <p class="MsoNormal" align="center" style="text-align:center"><span style="font-size:13.5pt;font-family:Arial;color:black">64<o:p></o:p></span></p>
+    </td>
+    <td style="padding:2.25pt 2.25pt 2.25pt 2.25pt">
+    <p class="MsoNormal" align="center" style="text-align:center"><span style="font-size:13.5pt;font-family:Arial;color:black">FALSE<o:p></o:p></span></p>
+    </td>
+   </tr>
+  </tbody></table>
+  </blockquote>
+  <p style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt"><span style="color:black">with the Next Fit pointer at offset 960. This will be the
+  case whichever of the four allocation policies you are using. The next three
+  processes should then be loaded into the queue and dequeued, enlisted and then
+  executed in the order: process 6, 7, then 8.<o:p></o:p></span></p>
+  <p style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt"><span style="color:black">Under First Fit, the 108 Mbyte, 256 Mbyte, and 80 Mbyte
+  processes will be allocated at offset 0, 224, and 108 respectively.<o:p></o:p></span></p>
+  <p style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt"><span style="color:black">Under Next Fit, they will be allocated at offset 0, 224,
+  and 480 respectively.<o:p></o:p></span></p>
+  <p style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt"><span style="color:black">Under Best Fit, they will be allocated at offset 672,
+  224, and 480 respectively.<o:p></o:p></span></p>
+  <p style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt"><span style="color:black">Under Worst Fit, they will be allocated at offset 224,
+  332, and 0 respectively.<o:p></o:p></span></p>
+  <p style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt"><strong><span style="font-family:Arial;color:#CC0000">N.B</span></strong><strong><span style="font-family:Arial;color:black">.</span></strong><span style="color:black"> The final version of the </span><span class="code1">hostd</span><span style="color:black"> dispatcher normally reserves the first 64 Mbyte of
+  memory for Real Time processes so that 64 should be added to all of the above
+  offsets. However when run with the </span><span class="code1">-mnr</span><span style="color:black"> option </span><span class="code1">hostd</span><span style="color:black"> will not pre-allocate the Real Time memory block. Run
+  the command line:<o:p></o:p></span></p>
+  <blockquote style="margin-top:5.0pt;margin-bottom:5.0pt">
+  <p class="code" style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt">hostd
+  -h</p>
+  </blockquote>
+  <p style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt"><span style="color:black">to find out which version of the dispatcher you have and
+  the command line switches in </span><span class="code1">hostd</span><span style="color:black"> to change the memory allocation model and printout
+  options (your </span><span class="code1">hostd</span><span style="color:black">
+  does not need to provide this extended functionality).<o:p></o:p></span></p>
+  <p style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt"><span style="color:black">Code should be in 'straight' C.<o:p></o:p></span></p>
+<!-- #EndEditable -->
+  <p style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt"><span style="color:#AF0000">Always use </span><span class="code1">nice</span><span style="color:#AF0000"> to execute your test programs at lower priority to
+  ensure they do not inconvenience other users if they go 'haywire'. e.g.:<br>
+  &nbsp;<br>
+  </span><span class="code1">&nbsp;&nbsp;&nbsp;&gt;nice a.out</span><span style="color:#AF0000"> </span><span style="color:black"><o:p></o:p></span></p>
+  <p style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt"><span style="font-size:10.0pt;color:black"><!-- #BeginEditable "Acknowledgement" --><!-- #BeginLibraryItem "/Library/Acknowledge.lbi" -->The
+  descriptions of the system functions above are drawn from sources that
+  include </span><code><span style="font-size:10.0pt">man</span></code><span style="font-size:10.0pt;color:black">uals on the Sun Solaris system and the
+  MAC OS X Darwin/BDS system, and also from 'Advanced Programming in the UNIX
+  Environment', W. Richard Stevens, Addison-Wesley, 1993.</span><span style="color:black"><o:p></o:p></span></p>
+  </td>
+ </tr>
+</tbody></table>
+
+</div>
+
+<p class="MsoNormal" align="center" style="text-align:center"><span style="font-size:13.5pt;font-family:Arial;color:black;display:none;mso-hide:
+all"><o:p>&nbsp;</o:p></span></p>
+
+<!-- #BeginLibraryItem "/Library/DividingLineHome.lbi" -->
+
+<div align="center">
+
+<table class="MsoNormalTable" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100.0%;mso-cellspacing:0cm;mso-padding-alt:0cm 0cm 0cm 0cm">
+ <tbody><tr style="mso-yfti-irow:0;mso-yfti-firstrow:yes;mso-yfti-lastrow:yes">
+  <td width="23" style="width:17.25pt;padding:0cm 0cm 0cm 0cm">
+  <p class="MsoNormal"><span style="font-size:13.5pt;font-family:Arial;
+  color:black"><a href="http://rp-www.cs.usyd.edu.au/~comp3520/2012/Assgns/index.html"></a><o:p></o:p></span></p>
+  </td>
+  <td width="100%" style="width:100.0%;padding:0cm 0cm 0cm 0cm"><!-- #BeginLibraryItem "/Library/DividingLine.lbi" -->
+  <p class="MsoNormal"><span style="font-size:13.5pt;font-family:Arial;
+  color:black"><img border="0" width="721" height="17" id="_x0000_i1026" src="./Operating Systems - Exercise 10 - Memory Allocation_files/red.gif"><o:p></o:p></span></p>
+  </td>
+<!-- #EndLibraryItem -->
+  <td width="20" style="width:15.0pt;padding:0cm 0cm 0cm 0cm"><!-- #BeginLibraryItem "/Library/GoTop.lbi" -->
+  <p class="MsoNormal"><span style="font-size:13.5pt;font-family:Arial;
+  color:black"><a href="http://rp-www.cs.usyd.edu.au/~comp3520/2012/Assgns/exercise10.html#top"></a></span><!--[if gte vml 1]><v:shapetype id="_x0000_t75"
+   coordsize="21600,21600" o:spt="75" o:preferrelative="t" path="m@4@5l@4@11@9@11@9@5xe"
+   filled="f" stroked="f">
+   <v:stroke joinstyle="miter"/>
+   <v:formulas>
+    <v:f eqn="if lineDrawn pixelLineWidth 0"/>
+    <v:f eqn="sum @0 1 0"/>
+    <v:f eqn="sum 0 0 @1"/>
+    <v:f eqn="prod @2 1 2"/>
+    <v:f eqn="prod @3 21600 pixelWidth"/>
+    <v:f eqn="prod @3 21600 pixelHeight"/>
+    <v:f eqn="sum @0 0 1"/>
+    <v:f eqn="prod @6 1 2"/>
+    <v:f eqn="prod @7 21600 pixelWidth"/>
+    <v:f eqn="sum @8 21600 0"/>
+    <v:f eqn="prod @7 21600 pixelHeight"/>
+    <v:f eqn="sum @10 21600 0"/>
+   </v:formulas>
+   <v:path o:extrusionok="f" gradientshapeok="t" o:connecttype="rect"/>
+   <o:lock v:ext="edit" aspectratio="t"/>
+  </v:shapetype><v:shape id="_x0000_s1028" type="#_x0000_t75" alt="top"
+   href="#top" style='position:absolute;margin-left:-75pt;margin-top:0;width:15pt;
+   height:12.75pt;z-index:1;mso-wrap-distance-left:0;mso-wrap-distance-right:0;
+   mso-position-horizontal:right;mso-position-horizontal-relative:text;
+   mso-position-vertical-relative:line' o:allowoverlap="f" o:button="t">
+   <v:imagedata src="images/gotop.gif"/>
+   <w:wrap type="square"/>
+  </v:shape><![endif]--><!--[if !vml]--><a href="http://rp-www.cs.usyd.edu.au/~comp3520/2012/Assgns/exercise10.html#top"><img border="0" width="20" height="17" src="./Operating Systems - Exercise 10 - Memory Allocation_files/gotop.gif" align="right" alt="top" v:shapes="_x0000_s1028"></a><!--[endif]--><span style="color:black"><a href="http://rp-www.cs.usyd.edu.au/~comp3520/2012/Assgns/exercise10.html#top"></a><a href="http://rp-www.cs.usyd.edu.au/~comp3520/2012/Assgns/exercise10.html#top"></a></span><span style="font-size:13.5pt;font-family:Arial;color:black;mso-no-proof:yes"><a href="http://rp-www.cs.usyd.edu.au/~comp3520/2012/Assgns/exercise10.html#top"></a></span><span style="font-size:13.5pt;font-family:Arial;
+  color:black"><o:p></o:p></span></p>
+  </td>
+ </tr>
+<!-- #EndLibraryItem -->
+</tbody></table>
+
+</div>
+
+<p><!-- #BeginLibraryItem "/Library/UseBy.lbi" --><i><span style="font-size:
+10.0pt;font-family:&quot;Times New Roman&quot;;color:black"><!-- #EndLibraryItem -->For
+use only by students and instructors using the supplementary material available
+with the text book: "Operating Systems - Internals and Design
+Principles", William Stallings, Prentice Hall, 5th Edition, 2004. Not to
+be printed out or copied by any other persons or used for any other purpose
+without written permission of the author(s).</span></i><!-- #EndLibraryItem --><span style="color:black"> <o:p></o:p></span></p>
+
+<p align="right" style="text-align:right"><!-- #BeginLibraryItem "/Library/copyright.lbi" --><i><span style="font-size:10.0pt;font-family:&quot;Times New Roman&quot;;color:black">©</span></i><span style="color:black"> <o:p></o:p></span></p>
+
+</div>
+
+<!-- #EndLibraryItem -->
+
+
+<!-- #EndTemplate -->
+
+</body></html>

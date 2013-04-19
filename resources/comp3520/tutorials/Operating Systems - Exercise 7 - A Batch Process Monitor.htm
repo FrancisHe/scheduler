@@ -1,0 +1,712 @@
+
+<!-- saved from url=(0066)http://rp-www.cs.usyd.edu.au/~comp3520/2012/Assgns/exercise07.html -->
+<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><!-- #BeginTemplate "/Templates/exercise.dwt" --><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+
+<meta name="ProgId" content="Word.Document">
+<meta name="Generator" content="Microsoft Word 11">
+<meta name="Originator" content="Microsoft Word 11">
+<link rel="File-List" href="http://rp-www.cs.usyd.edu.au/~comp3520/2012/Assgns/exercise07_files/filelist.xml">
+<link rel="Edit-Time-Data" href="http://rp-www.cs.usyd.edu.au/~comp3520/2012/Assgns/exercise07_files/editdata.mso">
+<!--[if !mso]>
+<style>
+v\:* {behavior:url(#default#VML);}
+o\:* {behavior:url(#default#VML);}
+w\:* {behavior:url(#default#VML);}
+.shape {behavior:url(#default#VML);}
+</style>
+<![endif]-->
+<title>Operating Systems - Exercise 7 - A Batch Process Monitor</title>
+<!--[if gte mso 9]><xml>
+ <o:DocumentProperties>
+  <o:Author>School of Information Technologies</o:Author>
+  <o:LastAuthor>School of Information Technologies</o:LastAuthor>
+  <o:Revision>11</o:Revision>
+  <o:TotalTime>26</o:TotalTime>
+  <o:Created>2010-04-19T06:41:00Z</o:Created>
+  <o:LastSaved>2011-04-18T03:32:00Z</o:LastSaved>
+  <o:Pages>1</o:Pages>
+  <o:Words>1071</o:Words>
+  <o:Characters>6109</o:Characters>
+  <o:Company>University of Sydney - School of IT</o:Company>
+  <o:Lines>50</o:Lines>
+  <o:Paragraphs>14</o:Paragraphs>
+  <o:CharactersWithSpaces>7166</o:CharactersWithSpaces>
+  <o:Version>11.9999</o:Version>
+ </o:DocumentProperties>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:WordDocument>
+  <w:Zoom>BestFit</w:Zoom>
+  <w:ValidateAgainstSchemas/>
+  <w:SaveIfXMLInvalid>false</w:SaveIfXMLInvalid>
+  <w:IgnoreMixedContent>false</w:IgnoreMixedContent>
+  <w:AlwaysShowPlaceholderText>false</w:AlwaysShowPlaceholderText>
+  <w:Compatibility>
+   <w:UseFELayout/>
+  </w:Compatibility>
+  <w:BrowserLevel>MicrosoftInternetExplorer4</w:BrowserLevel>
+ </w:WordDocument>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:LatentStyles DefLockedState="false" LatentStyleCount="156">
+ </w:LatentStyles>
+</xml><![endif]-->
+<link rel="Stylesheet" type="text/css" media="all" href="./Operating Systems - Exercise 7 - A Batch Process Monitor_files/sans.css">
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:SimSun;
+	panose-1:2 1 6 0 3 1 1 1 1 1;
+	mso-font-alt:\5B8B\4F53;
+	mso-font-charset:134;
+	mso-generic-font-family:auto;
+	mso-font-pitch:variable;
+	mso-font-signature:3 135135232 16 0 262145 0;}
+@font-face
+	{font-family:"Script MT Bold";
+	panose-1:3 4 6 2 4 6 7 8 9 4;
+	mso-font-charset:0;
+	mso-generic-font-family:script;
+	mso-font-pitch:variable;
+	mso-font-signature:3 0 0 0 1 0;}
+@font-face
+	{font-family:"\@SimSun";
+	panose-1:2 1 6 0 3 1 1 1 1 1;
+	mso-font-charset:134;
+	mso-generic-font-family:auto;
+	mso-font-pitch:variable;
+	mso-font-signature:3 135135232 16 0 262145 0;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-parent:"";
+	margin:0pt;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+h2
+	{mso-margin-top-alt:auto;
+	margin-right:0pt;
+	mso-margin-bottom-alt:auto;
+	margin-left:0pt;
+	mso-pagination:widow-orphan;
+	mso-outline-level:2;
+	font-size:18.0pt;
+	mso-fareast-font-family:SimSun;
+	font-weight:bold;}
+h3
+	{mso-margin-top-alt:auto;
+	margin-right:0pt;
+	mso-margin-bottom-alt:auto;
+	margin-left:0pt;
+	mso-pagination:widow-orphan;
+	mso-outline-level:3;
+	font-size:18.0pt;
+	mso-fareast-font-family:SimSun;}
+a:link, span.MsoHyperlink
+	{color:navy;
+	text-decoration:underline;
+	text-underline:single;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:blue;
+	text-decoration:underline;
+	text-underline:single;}
+p
+	{mso-margin-top-alt:auto;
+	margin-right:0pt;
+	mso-margin-bottom-alt:auto;
+	margin-left:0pt;
+	mso-pagination:widow-orphan;
+	font-size:13.5pt;
+	mso-fareast-font-family:"Times New Roman";}
+code
+	{mso-fareast-font-family:"Times New Roman";}
+pre
+	{margin:0pt;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt;
+	font-size:13.5pt;
+	mso-fareast-font-family:"Times New Roman";
+	font-weight:bold;}
+tt
+	{mso-ansi-font-size:13.5pt;
+	mso-bidi-font-size:13.5pt;
+	mso-fareast-font-family:"Times New Roman";}
+p.script, li.script, div.script
+	{mso-style-name:script;
+	mso-margin-top-alt:auto;
+	margin-right:0pt;
+	mso-margin-bottom-alt:auto;
+	margin-left:0pt;
+	mso-pagination:widow-orphan;
+	font-size:13.5pt;
+	mso-fareast-font-family:"Times New Roman";}
+p.tinytext, li.tinytext, div.tinytext
+	{mso-style-name:tinytext;
+	mso-margin-top-alt:auto;
+	margin-right:0pt;
+	mso-margin-bottom-alt:auto;
+	margin-left:0pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	mso-fareast-font-family:"Times New Roman";}
+p.code, li.code, div.code
+	{mso-style-name:code;
+	mso-margin-top-alt:auto;
+	margin-right:0pt;
+	mso-margin-bottom-alt:auto;
+	margin-left:0pt;
+	mso-pagination:widow-orphan;
+	font-size:13.5pt;
+	mso-fareast-font-family:"Times New Roman";
+	font-weight:bold;}
+p.footertext, li.footertext, div.footertext
+	{mso-style-name:footertext;
+	mso-margin-top-alt:auto;
+	margin-right:0pt;
+	mso-margin-bottom-alt:auto;
+	margin-left:0pt;
+	mso-pagination:widow-orphan;
+	font-size:13.5pt;
+	mso-fareast-font-family:"Times New Roman";}
+p.unlink, li.unlink, div.unlink
+	{mso-style-name:unlink;
+	mso-margin-top-alt:auto;
+	margin-right:0pt;
+	mso-margin-bottom-alt:auto;
+	margin-left:0pt;
+	mso-pagination:widow-orphan;
+	font-size:13.5pt;
+	mso-fareast-font-family:"Times New Roman";}
+p.topred, li.topred, div.topred
+	{mso-style-name:topred;
+	mso-margin-top-alt:auto;
+	margin-right:0pt;
+	mso-margin-bottom-alt:auto;
+	margin-left:0pt;
+	mso-pagination:widow-orphan;
+	font-size:13.5pt;
+	mso-fareast-font-family:"Times New Roman";}
+p.set10pt, li.set10pt, div.set10pt
+	{mso-style-name:set10pt;
+	mso-margin-top-alt:auto;
+	margin-right:0pt;
+	mso-margin-bottom-alt:auto;
+	margin-left:0pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	mso-fareast-font-family:"Times New Roman";}
+p.super, li.super, div.super
+	{mso-style-name:super;
+	mso-margin-top-alt:auto;
+	margin-right:0pt;
+	mso-margin-bottom-alt:auto;
+	margin-left:0pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	mso-fareast-font-family:"Times New Roman";}
+p.sub, li.sub, div.sub
+	{mso-style-name:sub;
+	mso-margin-top-alt:auto;
+	margin-right:0pt;
+	mso-margin-bottom-alt:auto;
+	margin-left:0pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	mso-fareast-font-family:"Times New Roman";}
+p.bigo, li.bigo, div.bigo
+	{mso-style-name:bigo;
+	mso-margin-top-alt:auto;
+	margin-right:0pt;
+	mso-margin-bottom-alt:auto;
+	margin-left:0pt;
+	mso-pagination:widow-orphan;
+	font-size:18.0pt;
+	mso-fareast-font-family:"Times New Roman";
+	font-weight:bold;
+	font-style:italic;}
+p.justify, li.justify, div.justify
+	{mso-style-name:justify;
+	mso-margin-top-alt:auto;
+	margin-right:0pt;
+	mso-margin-bottom-alt:auto;
+	margin-left:0pt;
+	text-align:justify;
+	text-justify:inter-ideograph;
+	mso-pagination:widow-orphan;
+	font-size:13.5pt;
+	mso-fareast-font-family:"Times New Roman";}
+p.red, li.red, div.red
+	{mso-style-name:red;
+	mso-margin-top-alt:auto;
+	margin-right:0pt;
+	mso-margin-bottom-alt:auto;
+	margin-left:0pt;
+	mso-pagination:widow-orphan;
+	font-size:13.5pt;
+	mso-fareast-font-family:"Times New Roman";}
+span.code1
+	{mso-style-name:code1;
+	mso-ansi-font-size:13.5pt;
+	mso-bidi-font-size:13.5pt;
+	font-family:"Courier New";
+	mso-ascii-font-family:"Courier New";
+	mso-hansi-font-family:"Courier New";
+	mso-bidi-font-family:"Courier New";
+	color:#CC00CC;
+	font-weight:bold;}
+@page Section1
+	{size:595.3pt 841.9pt;
+	margin:72.0pt 90.0pt 72.0pt 90.0pt;
+	mso-header-margin:35.4pt;
+	mso-footer-margin:35.4pt;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;}
+ /* List Definitions */
+ @list l0
+	{mso-list-id:2049140442;
+	mso-list-template-ids:76428730;}
+@list l0:level1
+	{mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l0:level2
+	{mso-level-number-format:roman-lower;
+	mso-level-tab-stop:72.0pt;
+	mso-level-number-position:right;
+	text-indent:-18.0pt;}
+@list l0:level3
+	{mso-level-number-format:alpha-lower;
+	mso-level-tab-stop:108.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l0:level4
+	{mso-level-number-format:alpha-upper;
+	mso-level-tab-stop:144.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l0:level5
+	{mso-level-tab-stop:180.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l0:level6
+	{mso-level-tab-stop:216.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l0:level7
+	{mso-level-tab-stop:252.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l0:level8
+	{mso-level-tab-stop:288.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l0:level9
+	{mso-level-tab-stop:324.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+ol
+	{margin-bottom:0pt;}
+ul
+	{margin-bottom:0pt;}
+-->
+</style>
+<!--[if gte mso 10]>
+<style>
+ /* Style Definitions */
+ table.MsoNormalTable
+	{mso-style-name:"Table Normal";
+	mso-tstyle-rowband-size:0;
+	mso-tstyle-colband-size:0;
+	mso-style-noshow:yes;
+	mso-style-parent:"";
+	mso-padding-alt:0pt 5.4pt 0pt 5.4pt;
+	mso-para-margin:0pt;
+	mso-para-margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	mso-ansi-language:#0400;
+	mso-fareast-language:#0400;
+	mso-bidi-language:#0400;}
+</style>
+<![endif]--><!-- #BeginEditable "doctitle" --><!-- #EndEditable -->
+<meta name="DC.Creator" content="Dr Ian G Graham, Griffith University, Gold Coast, Queensland, Australia">
+<meta name="DC.Date.created" content="2003-12-01">
+<meta name="DC.Title" content="Exercise/Tutorial Page">
+<meta name="DC.Subject" content="Operating Systems; Instructor resource; Projects; Exercises">
+<meta name="DC.Description" content="This page contains exercises for the instructors resource supporting the text book: Operating Systems by William Stallings, 5th edition, Prentice-Hall, 2004">
+<meta name="DC.Identifier" content="TBA">
+<meta name="DC.Publisher" content="Prentice Hall">
+<meta name="DC.Format" scheme="IMT" content="text/html">
+<meta name="DC.Language" scheme="RFC3066" content="en">
+<meta name="subject" content="Operating Systems - Exercises">
+<meta name="keywords" content="Operating Systems, instructor, project, exercise, reference">
+<meta name="robots" content="NOINDEX">
+<link rel="shortcut icon" href="http://rp-www.cs.usyd.edu.au/~comp3520/2012/Assgns/favicon.gif">
+<!--[if gte mso 9]><xml>
+ <o:shapedefaults v:ext="edit" spidmax="8194"/>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapelayout v:ext="edit">
+  <o:idmap v:ext="edit" data="1"/>
+ </o:shapelayout></xml><![endif]-->
+</head>
+
+<body bgcolor="white" lang="EN-AU" link="navy" vlink="blue" style="tab-interval:36.0pt" youdao="bind">
+
+<div class="Section1">
+
+<table class="MsoNormalTable" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100.0%;mso-cellspacing:0pt;mso-padding-alt:0pt 0pt 0pt 0pt">
+ <tbody><tr style="mso-yfti-irow:0;mso-yfti-firstrow:yes;mso-yfti-lastrow:yes">
+  <td width="23" style="width:17.25pt;padding:0pt 0pt 0pt 0pt">
+  <p class="MsoNormal"><span style="font-size:13.5pt;font-family:Arial;
+  color:black"><a href="http://rp-www.cs.usyd.edu.au/~comp3520/2012/Assgns/index.html"></a><o:p></o:p></span></p>
+  </td>
+  <td width="100%" style="width:100.0%;padding:0pt 0pt 0pt 0pt"><!-- #BeginLibraryItem "/Library/DividingLine.lbi" -->
+  <p class="MsoNormal"><a name="top"></a><span style="font-size:13.5pt;font-family:
+  Arial;color:black"><img border="0" width="721" height="17" id="_x0000_i1025" src="./Operating Systems - Exercise 7 - A Batch Process Monitor_files/red.gif"><o:p></o:p></span></p>
+  </td>
+ </tr>
+<!-- #EndLibraryItem -->
+</tbody></table>
+
+<h1 align="center" style="text-align:center"><span style="color:black">COMP3520
+Operating Systems - Exercises<!-- #EndLibraryItem --> <o:p></o:p></span></h1>
+
+<h2 align="center" style="text-align:center"><span style="color:black"><!-- #EndLibraryItem --><!-- #BeginEditable "heading" -->Exercise
+7 - A Batch Process Monitor<o:p></o:p></span></h2>
+
+<!-- #EndEditable -->
+
+<div align="center">
+
+<table class="MsoNormalTable" border="0" cellspacing="0" cellpadding="0" width="95%" style="width:95.0%;mso-cellspacing:0pt;mso-padding-alt:0pt 0pt 0pt 0pt">
+ <tbody><tr style="mso-yfti-irow:0;mso-yfti-firstrow:yes;mso-yfti-lastrow:yes">
+  <td style="padding:0pt 0pt 0pt 0pt"><!-- #BeginEditable "body" -->
+  <p><span style="color:black">For the second assignment you will need to
+  implement both a First-Come-First-Served process dispatcher, and,
+  effectively, a Round-Robin dispatcher (more about this soon).<o:p></o:p></span></p>
+  <h2><span style="color:black">First-Come-First-Served Dispatcher<o:p></o:p></span></h2>
+  <p><span style="color:black">A First-Come-First-Served (FCFS) dispatcher is
+  essentially the same as a Batch Process Monitor. For the second assignment
+  you will have a list of processes which you will need to schedule for
+  execution depending on the time of submission and the priority of the
+  process.<o:p></o:p></span></p>
+  <p><span style="color:black">As always, we should start off simply - How
+  would you go about accepting a list of programs from a file and executing
+  them in a FCFS manner? e.g.<o:p></o:p></span></p>
+  <blockquote style="margin-top:5.0pt;margin-bottom:5.0pt">
+  <p class="code">gcc -Wall -g sleepy.c -o sleepy<br>
+  sleepy 20 &gt; junk<br>
+  cat junk</p>
+  </blockquote>
+  <p><span style="color:black">That's easy, you've essentially just done that
+  with a batch file for your first assignment! However, now associate an
+  arrival time for each program so that execution of the program can not start
+  until at least that time elapses. e.g. <o:p></o:p></span></p>
+  <blockquote style="margin-top:5.0pt;margin-bottom:5.0pt">
+  <p class="code">0,sleepy 3<br>
+  2,sleepy 6<br>
+  4,sleepy 4<br>
+  6,sleepy 5<br>
+  8,sleepy 2</p>
+  </blockquote>
+  <p><span style="color:black">Or using the process list format defined for the
+  second assignment and using sensible default values:<o:p></o:p></span></p>
+  <blockquote style="margin-top:5.0pt;margin-bottom:5.0pt">
+  <p><span style="color:black">&lt;arrival&nbsp;time&gt;,&lt;priority&gt;,&lt;cputime&gt;,&lt;memory&nbsp;alloc&gt;,&lt;res1&nbsp;alloc&gt;,&lt;res2&gt;,&lt;res3&gt;,&lt;res4&gt;<o:p></o:p></span></p>
+  <p class="code">0, 0, 3, 64, 0, 0, 0, 0<br>
+  2, 0, 6, 64, 0, 0, 0, 0<br>
+  4, 0, 4, 64, 0, 0, 0, 0<br>
+  6, 0, 5, 64, 0, 0, 0, 0<br>
+  8, 0, 2, 64, 0, 0, 0, 0</p>
+  </blockquote>
+  <p><span style="color:black">You will need to create a queue of job
+  structures so that you only dequeue a job when the appropriate time has
+  elapsed and there is no longer a current job running. (There is a guarantee
+  that the jobs presented in the input dispatch file will be in chronological
+  order of arrival).<o:p></o:p></span></p>
+  <p align="center" style="text-align:center"><span style="color:black"><!--[if gte vml 1]><v:shapetype
+   id="_x0000_t75" coordsize="21600,21600" o:spt="75" o:preferrelative="t"
+   path="m@4@5l@4@11@9@11@9@5xe" filled="f" stroked="f">
+   <v:stroke joinstyle="miter"/>
+   <v:formulas>
+    <v:f eqn="if lineDrawn pixelLineWidth 0"/>
+    <v:f eqn="sum @0 1 0"/>
+    <v:f eqn="sum 0 0 @1"/>
+    <v:f eqn="prod @2 1 2"/>
+    <v:f eqn="prod @3 21600 pixelWidth"/>
+    <v:f eqn="prod @3 21600 pixelHeight"/>
+    <v:f eqn="sum @0 0 1"/>
+    <v:f eqn="prod @6 1 2"/>
+    <v:f eqn="prod @7 21600 pixelWidth"/>
+    <v:f eqn="sum @8 21600 0"/>
+    <v:f eqn="prod @7 21600 pixelHeight"/>
+    <v:f eqn="sum @10 21600 0"/>
+   </v:formulas>
+   <v:path o:extrusionok="f" gradientshapeok="t" o:connecttype="rect"/>
+   <o:lock v:ext="edit" aspectratio="t"/>
+  </v:shapetype><v:shape id="_x0000_i1026" type="#_x0000_t75" alt="" style='width:438.75pt;
+   height:56.25pt'>
+   <v:imagedata src="exercise07_files/image001.gif" o:href="../../../../../bbz/COMP3520/2010/OS-Text-Projects/html/images/ex7fig1.gif"/>
+  </v:shape><![endif]--><!--[if !vml]--><img border="0" width="585" height="75" src="./Operating Systems - Exercise 7 - A Batch Process Monitor_files/image001.gif" v:shapes="_x0000_i1026"><!--[endif]--><o:p></o:p></span></p>
+  <p><span style="color:black">The first thing to do is to define a process
+  structure such as:<o:p></o:p></span></p>
+  <blockquote style="margin-top:5.0pt;margin-bottom:5.0pt"><pre>struct pcb {</pre><pre><span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp; </span>pid_t pid;<span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>// system process ID</pre><pre><span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp; </span>char * args[MAXARGS];<span style="mso-spacerun:yes">&nbsp; </span>// program name and args</pre><pre><span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp; </span>int arrivaltime;</pre><pre><span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp; </span>int remainingcputime;</pre><pre><span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp; </span>struct pcb * next;<span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp;&nbsp; </span>// links for Pcb handlers</pre><pre>};</pre><pre>typedef struct pcb Pcb;</pre><pre>typedef Pcb * PcbPtr; </pre></blockquote>
+  <p style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt"><span style="color:black">This structure can be used for all the queues (linked
+  lists) needed for the project (with a few extra elements in the structure).<o:p></o:p></span></p>
+  <p style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt"><b><span style="color:black">Dispatcher algorithm:</span></b><span style="color:black"><o:p></o:p></span></p>
+  <p style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt"><span style="color:black">The basic First-Come-First-Served (FCFS) dispatcher
+  algorithm can be reduced to the following pseudo-code. Note that the tests
+  may appear to be out of order (shouldn't one be doing the test at 4.i after
+  the sleep rather than before it?). With the current model it makes no
+  difference, but there are reasons for doing it in this order as we shall see
+  when we come to the multiple dispatcher models later on.<o:p></o:p></span></p>
+  <blockquote style="margin-top:5.0pt;margin-bottom:5.0pt">
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:36.0pt;text-indent:-18.0pt;mso-list:l0 level1 lfo2;tab-stops:
+  list 36.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:
+  Arial;mso-fareast-font-family:Arial;color:black"><span style="mso-list:Ignore">1.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;font-family:Arial;color:black">Initialize
+  dispatcher queue;<o:p></o:p></span></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:36.0pt;text-indent:-18.0pt;mso-list:l0 level1 lfo2;tab-stops:
+  list 36.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:
+  Arial;mso-fareast-font-family:Arial;color:black"><span style="mso-list:Ignore">2.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;font-family:Arial;color:black">Fill
+  dispatcher queue from dispatch list file;<o:p></o:p></span></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:36.0pt;text-indent:-18.0pt;mso-list:l0 level1 lfo2;tab-stops:
+  list 36.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:
+  Arial;mso-fareast-font-family:Arial;color:black"><span style="mso-list:Ignore">3.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;font-family:Arial;color:black">Start
+  dispatcher timer;<o:p></o:p></span></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:36.0pt;text-indent:-18.0pt;mso-list:l0 level1 lfo2;tab-stops:
+  list 36.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:
+  Arial;mso-fareast-font-family:Arial;color:black"><span style="mso-list:Ignore">4.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;font-family:Arial;color:black">While
+  there's anything in the queue or there is a currently running process: <o:p></o:p></span></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:72.0pt;text-indent:-72.0pt;mso-text-indent-alt:-18.0pt;
+  mso-list:l0 level2 lfo2;tab-stops:list 72.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:Arial;mso-fareast-font-family:Arial;
+  color:black"><span style="mso-list:Ignore"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>i.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;
+  font-family:Arial;color:black">If a process is currently running; <o:p></o:p></span></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:108.0pt;text-indent:-18.0pt;mso-list:l0 level3 lfo2;tab-stops:
+  list 108.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:
+  Arial;mso-fareast-font-family:Arial;color:black"><span style="mso-list:Ignore">a.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;font-family:Arial;color:black">Decrement
+  process </span></span><span class="code1"><span style="font-size:13.5pt">remainingcputime</span></span><span style="font-size:13.5pt;font-family:Arial;color:black">;<o:p></o:p></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:108.0pt;text-indent:-18.0pt;mso-list:l0 level3 lfo2;tab-stops:
+  list 108.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:
+  Arial;mso-fareast-font-family:Arial;color:black"><span style="mso-list:Ignore">b.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;font-family:Arial;color:black">If times
+  up: <o:p></o:p></span></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:144.0pt;text-indent:-18.0pt;mso-list:l0 level4 lfo2;tab-stops:
+  list 144.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:
+  Arial;mso-fareast-font-family:Arial;color:black"><span style="mso-list:Ignore">A.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp; </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;font-family:Arial;color:black">Send </span></span><span class="code1"><span style="font-size:13.5pt">SIGINT</span></span><span style="font-size:13.5pt;font-family:Arial;color:black"> to the process to
+  terminate it; <o:p></o:p></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:144.0pt;text-indent:-18.0pt;mso-list:l0 level4 lfo2;tab-stops:
+  list 144.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:
+  Arial;mso-fareast-font-family:Arial;color:black"><span style="mso-list:Ignore">B.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp; </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;font-family:Arial;color:black">Free up
+  process structure memory<o:p></o:p></span></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:72.0pt;text-indent:-72.0pt;mso-text-indent-alt:-18.0pt;
+  mso-list:l0 level2 lfo2;tab-stops:list 72.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:Arial;mso-fareast-font-family:Arial;
+  color:black"><span style="mso-list:Ignore"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>ii.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;
+  font-family:Arial;color:black">If no process currently running &amp;&amp;<br>
+  dispatcher queue is not empty &amp;&amp;<br>
+  </span></span><span class="code1"><span style="font-size:13.5pt">arrivaltime</span></span><span style="font-size:13.5pt;font-family:Arial;color:black"> of process at head of
+  queue is &lt;= dispatcher timer: <o:p></o:p></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:108.0pt;text-indent:-18.0pt;mso-list:l0 level3 lfo2;tab-stops:
+  list 108.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:
+  Arial;mso-fareast-font-family:Arial;color:black"><span style="mso-list:Ignore">a.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;font-family:Arial;color:black">Dequeue
+  process and start it (</span></span><span class="code1"><span style="font-size:
+  13.5pt">fork</span></span><span style="font-size:13.5pt;font-family:Arial;
+  color:black"> &amp; </span><span class="code1"><span style="font-size:13.5pt">exec</span></span><span style="font-size:13.5pt;font-family:Arial;color:black">)<o:p></o:p></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:108.0pt;text-indent:-18.0pt;mso-list:l0 level3 lfo2;tab-stops:
+  list 108.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:
+  Arial;mso-fareast-font-family:Arial;color:black"><span style="mso-list:Ignore">b.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;font-family:Arial;color:black">Set it
+  as currently running process;<o:p></o:p></span></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:72.0pt;text-indent:-72.0pt;mso-text-indent-alt:-18.0pt;
+  mso-list:l0 level2 lfo2;tab-stops:list 72.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:Arial;mso-fareast-font-family:Arial;
+  color:black"><span style="mso-list:Ignore"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>iii.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span></span></span><!--[endif]--><span dir="LTR"><span class="code1"><span style="font-size:13.5pt">sleep</span></span></span><span style="font-size:
+  13.5pt;font-family:Arial;color:black"> for one second;<o:p></o:p></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:72.0pt;text-indent:-72.0pt;mso-text-indent-alt:-18.0pt;
+  mso-list:l0 level2 lfo2;tab-stops:list 72.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:Arial;mso-fareast-font-family:Arial;
+  color:black"><span style="mso-list:Ignore"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>iv.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;
+  font-family:Arial;color:black">Increment dispatcher timer;<o:p></o:p></span></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:72.0pt;text-indent:-72.0pt;mso-text-indent-alt:-18.0pt;
+  mso-list:l0 level2 lfo2;tab-stops:list 72.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:Arial;mso-fareast-font-family:Arial;
+  color:black"><span style="mso-list:Ignore"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>v.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;
+  font-family:Arial;color:black">Go back to 4.<o:p></o:p></span></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:36.0pt;text-indent:-18.0pt;mso-list:l0 level1 lfo2;tab-stops:
+  list 36.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:
+  Arial;mso-fareast-font-family:Arial;color:black"><span style="mso-list:Ignore">5.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;font-family:Arial;color:black">Exit. <o:p></o:p></span></span></p>
+  </blockquote>
+  <p style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt"><span style="color:black">or something like that!<o:p></o:p></span></p>
+  <p style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt"><span style="color:black">For the purposes of this exercise (and the 2nd
+  assignment) you should use the process </span><span class="code1">process</span><span style="color:black"> supplied (source: <a href="http://rp-www.cs.usyd.edu.au/~comp3520/2012/Assgns/sigtrap.c.html" target="_blank">sigtrap.c</a>) <span style="mso-spacerun:yes">&nbsp;</span>- it
+  will tell you what signals you have sent it as well as ticking away for the
+  length of time you allow it to run. In the structure above, you would
+  initialise the structure to:<o:p></o:p></span></p>
+  <blockquote style="margin-top:5.0pt;margin-bottom:5.0pt">
+  <p class="code" style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt">PcbPtr
+  newPcb = (PcbPtr) malloc(sizeof(Pcb));<br>
+  ...<br>
+  newPcb-&gt;args[0] = "process";<br>
+  newPcb-&gt;args[1] = NULL;<br>
+  newPcb.... </p>
+  </blockquote>
+  <p style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt"><span style="color:black">and then, when doing the </span><span class="code1">exec</span><span style="color:black"> all you need to do is:<o:p></o:p></span></p>
+  <blockquote style="margin-top:5.0pt;margin-bottom:5.0pt">
+  <p class="code" style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt">execvp(activePcb-&gt;args[0],
+  activePcb-&gt;args);</p>
+  </blockquote>
+  <p style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt"><span style="color:black">There are a number of ways to terminate a job. Since we
+  know it's process ID, the easiest way to do this is to send the process a
+  terminating signal using the <a href="http://rp-www.cs.usyd.edu.au/~comp3520/2012/Assgns/kill.html"><span class="code1">kill</span></a>
+  function. The one we need to use here is </span><span class="code1">SIGINT</span><span style="color:black">, which is the equivalent of the </span><span class="code1">Ctrl-C</span><span style="color:black"> keyboard interrupt
+  fielded by the shell. You could also send </span><span class="code1">SIGKILL</span><span style="color:black"> but </span><span class="code1">SIGINT</span><span style="color:black"> is preferred. i.e. to terminate the process with Process
+  ID </span><span class="code1">activePcb-&gt;pid</span><span style="color:black">,
+  you would call the function:<o:p></o:p></span></p>
+  <blockquote style="margin-top:5.0pt;margin-bottom:5.0pt"><pre>if(kill(activePcb-&gt;pid,SIGINT))</pre><pre>&nbsp;&nbsp;&nbsp;&nbsp;fprintf(stderr,"terminate of %d failed",</pre><pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(int)activePcb-&gt;pid);</pre></blockquote>
+  <p style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt"><span style="color:black">For the queue management, you may find the following
+  function list useful:<o:p></o:p></span></p>
+  <blockquote style="margin-top:5.0pt;margin-bottom:5.0pt">
+  <p style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt"><span class="code1">PcbPtr startPcb(PcbPtr process)</span><b><span style="font-family:
+  &quot;Courier New&quot;;color:#CC00CC"><br>
+  <span class="code1">- start a process</span><br>
+  <span class="code1">returns:</span><br>
+  <span class="code1">&nbsp;&nbsp;PcbPtr of process</span><br>
+  <span class="code1">&nbsp;&nbsp;NULL if start failed</span></span></b><span style="color:black"><o:p></o:p></span></p>
+  <p class="code" style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt">PcbPtr
+  terminatePcb(PcbPtr process)<br>
+  - terminate a process<br>
+  returns:<br>
+  &nbsp;&nbsp;PcbPtr of process<br>
+  &nbsp;&nbsp;NULL if terminate failed</p>
+  <p class="code" style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt">PcbPtr
+  createnullPcb(void)<br>
+  - create inactive Pcb.<br>
+  returns:<br>
+  &nbsp;&nbsp;PcbPtr of newly initialised Pcb<br>
+  &nbsp;&nbsp;NULL if malloc failed </p>
+  <p class="code" style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt">PcbPtr
+  enqPcb (PcbPtr headofQ, PcbPtr process)<br>
+  - queue process (or join queues) at end of queue<br>
+  - enqueues at "tail" of queue list. <br>
+  returns:<br>
+  &nbsp; (new) head of queue</p>
+  <p class="code" style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt">PcbPtr
+  deqPcb (PcbPtr * headofQ);<br>
+  - dequeue process - take Pcb from "head" of queue.<br>
+  returns:<br>
+  &nbsp;&nbsp;PcbPtr if dequeued,<br>
+  &nbsp;&nbsp;NULL if queue was empty<br>
+  &nbsp;&nbsp;&amp; sets new head of Q pointer in adrs at 1st arg</p>
+  </blockquote>
+  <p style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt"><span style="color:black">The last three functions should be able to be dragged
+  (kicking and screaming) from your earlier Programming unit(s). We have used a
+  simple specific queue implementation here rather than a generic one, but
+  there is nothing to stop you using your own implementation provided that it
+  operates as a proper FIFO queue.<o:p></o:p></span></p>
+  <p style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt"><span style="color:black">To see the sort of sequence of output you should be
+  getting, run the following command line on the course directory (this should
+  have the reference </span><span class="code1">hostd</span><span style="color:black"> and</span><span class="code1"> process</span><span style="color:black"> applications)<o:p></o:p></span></p>
+  <blockquote style="margin-top:5.0pt;margin-bottom:5.0pt">
+  <p style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt"><strong><span style="font-family:&quot;Courier New&quot;;color:black">&gt;</span></strong><span class="code1">hostd <a href="fcfs.txt" target="_blank"><span style="font-weight:
+  normal">fcfs.txt</span></a></span><span style="color:black"><o:p></o:p></span></p>
+  </blockquote>
+  <p style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt"><span style="color:black">and compare the output with the top example of Figure 9.5
+  of Stalling's Operating Systems textbook:<o:p></o:p></span></p>
+  <p align="center" style="text-align:center;tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt"><span style="color:black"><img border="0" width="600" height="139" id="_x0000_i1027" src="./Operating Systems - Exercise 7 - A Batch Process Monitor_files/fcfs.gif"><o:p></o:p></span></p>
+  <p style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt"><span style="color:black">Code should be in 'straight' C.<o:p></o:p></span></p>
+<!-- #EndEditable -->
+  <p style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt"><span style="color:#AF0000">Always use </span><span class="code1">nice</span><span style="color:#AF0000"> to execute your test programs at lower priority to
+  ensure they do not inconvenience other users if they go 'haywire'. e.g.:<br>
+  &nbsp;<br>
+  </span><span class="code1">&nbsp;&nbsp;&nbsp;&gt;nice a.out</span><span style="color:#AF0000"> </span><span style="color:black"><o:p></o:p></span></p>
+  <p style="tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt"><span style="font-size:10.0pt;color:black"><!-- #BeginEditable "Acknowledgement" --><!-- #BeginLibraryItem "/Library/Acknowledge.lbi" -->The
+  descriptions of the system functions above are drawn from sources that
+  include </span><code><span style="font-size:10.0pt">man</span></code><span style="font-size:10.0pt;color:black">uals on the Sun Solaris system and the
+  MAC OS X Darwin/BDS system, and also from 'Advanced Programming in the UNIX
+  Environment', W. Richard Stevens, Addison-Wesley, 1993.</span><span style="color:black"><o:p></o:p></span></p>
+  </td>
+ </tr>
+</tbody></table>
+
+</div>
+
+<p class="MsoNormal" align="center" style="text-align:center"><span style="font-size:13.5pt;font-family:Arial;color:black;display:none;mso-hide:
+all"><o:p>&nbsp;</o:p></span></p>
+
+<!-- #BeginLibraryItem "/Library/DividingLineHome.lbi" -->
+
+<div align="center">
+
+<table class="MsoNormalTable" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100.0%;mso-cellspacing:0pt;mso-padding-alt:0pt 0pt 0pt 0pt">
+ <tbody><tr style="mso-yfti-irow:0;mso-yfti-firstrow:yes;mso-yfti-lastrow:yes">
+  <td width="23" style="width:17.25pt;padding:0pt 0pt 0pt 0pt">
+  <p class="MsoNormal"><span style="font-size:13.5pt;font-family:Arial;
+  color:black"><a href="http://rp-www.cs.usyd.edu.au/~comp3520/2012/Assgns/index.html"></a><o:p></o:p></span></p>
+  </td>
+  <td width="100%" style="width:100.0%;padding:0pt 0pt 0pt 0pt"><!-- #BeginLibraryItem "/Library/DividingLine.lbi" -->
+  <p class="MsoNormal"><span style="font-size:13.5pt;font-family:Arial;
+  color:black"><img border="0" width="721" height="17" id="_x0000_i1028" src="./Operating Systems - Exercise 7 - A Batch Process Monitor_files/red.gif"><o:p></o:p></span></p>
+  </td>
+<!-- #EndLibraryItem -->
+  <td width="20" style="width:15.0pt;padding:0pt 0pt 0pt 0pt"><!-- #BeginLibraryItem "/Library/GoTop.lbi" -->
+  <p class="MsoNormal"><span style="font-size:13.5pt;font-family:Arial;
+  color:black"><a href="http://rp-www.cs.usyd.edu.au/~comp3520/2012/Assgns/exercise07.html#top"></a></span><!--[if gte vml 1]><v:shape id="_x0000_s1028"
+   type="#_x0000_t75" alt="top" href="#top" style='position:absolute;
+   margin-left:-175pt;margin-top:0;width:15pt;height:12.75pt;z-index:1;
+   mso-wrap-distance-left:0;mso-wrap-distance-right:0;
+   mso-position-horizontal:right;mso-position-horizontal-relative:text;
+   mso-position-vertical-relative:line' o:allowoverlap="f" o:button="t">
+   <v:imagedata src="images/gotop.gif"/>
+   <w:wrap type="square"/>
+  </v:shape><![endif]--><!--[if !vml]--><a href="http://rp-www.cs.usyd.edu.au/~comp3520/2012/Assgns/exercise07.html#top"><img border="0" width="20" height="17" src="./Operating Systems - Exercise 7 - A Batch Process Monitor_files/gotop.gif" align="right" alt="top" v:shapes="_x0000_s1028"></a><!--[endif]--><span style="color:black"><a href="http://rp-www.cs.usyd.edu.au/~comp3520/2012/Assgns/exercise07.html#top"></a><a href="http://rp-www.cs.usyd.edu.au/~comp3520/2012/Assgns/exercise07.html#top"></a><a href="http://rp-www.cs.usyd.edu.au/~comp3520/2012/Assgns/exercise07.html#top"></a><a href="http://rp-www.cs.usyd.edu.au/~comp3520/2012/Assgns/exercise07.html#top"></a><a href="http://rp-www.cs.usyd.edu.au/~comp3520/2012/Assgns/exercise07.html#top"></a><a href="http://rp-www.cs.usyd.edu.au/~comp3520/2012/Assgns/exercise07.html#top"></a></span><span style="font-size:13.5pt;font-family:Arial;color:black;mso-no-proof:yes"><a href="http://rp-www.cs.usyd.edu.au/~comp3520/2012/Assgns/exercise07.html#top"></a></span><span style="font-size:13.5pt;font-family:Arial;
+  color:black"><o:p></o:p></span></p>
+  </td>
+ </tr>
+<!-- #EndLibraryItem -->
+</tbody></table>
+
+</div>
+
+<p><!-- #BeginLibraryItem "/Library/UseBy.lbi" --><i><span style="font-size:
+10.0pt;font-family:&quot;Times New Roman&quot;;color:black"><!-- #EndLibraryItem -->For
+use only by students and instructors using the supplementary material available
+with the text book: "Operating Systems - Internals and Design
+Principles", William Stallings, Prentice Hall, 5th Edition, 2004. Not to
+be printed out or copied by any other persons or used for any other purpose
+without written permission of the author(s).</span></i><!-- #EndLibraryItem --><span style="color:black"> <o:p></o:p></span></p>
+
+<p align="right" style="text-align:right"><!-- #BeginLibraryItem "/Library/copyright.lbi" --><i><span style="font-size:10.0pt;font-family:&quot;Times New Roman&quot;;color:black">©</span></i><span style="color:black"> <o:p></o:p></span></p>
+
+</div>
+
+<!-- #EndLibraryItem -->
+
+
+<!-- #EndTemplate -->
+
+</body></html>

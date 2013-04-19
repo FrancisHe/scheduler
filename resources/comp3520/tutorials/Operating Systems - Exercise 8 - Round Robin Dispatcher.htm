@@ -1,0 +1,655 @@
+
+<!-- saved from url=(0066)http://rp-www.cs.usyd.edu.au/~comp3520/2012/Assgns/exercise08.html -->
+<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><!-- #BeginTemplate "/Templates/exercise.dwt" --><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+
+<meta name="ProgId" content="Word.Document">
+<meta name="Generator" content="Microsoft Word 11">
+<meta name="Originator" content="Microsoft Word 11">
+<link rel="File-List" href="http://rp-www.cs.usyd.edu.au/~comp3520/2012/Assgns/exercise08_files/filelist.xml">
+<link rel="Edit-Time-Data" href="http://rp-www.cs.usyd.edu.au/~comp3520/2012/Assgns/exercise08_files/editdata.mso">
+<!--[if !mso]>
+<style>
+v\:* {behavior:url(#default#VML);}
+o\:* {behavior:url(#default#VML);}
+w\:* {behavior:url(#default#VML);}
+.shape {behavior:url(#default#VML);}
+</style>
+<![endif]-->
+<title>Operating Systems - Exercise 8 - Round Robin Dispatcher</title>
+<!--[if gte mso 9]><xml>
+ <o:DocumentProperties>
+  <o:Author>School of Information Technologies</o:Author>
+  <o:LastAuthor>School of Information Technologies</o:LastAuthor>
+  <o:Revision>4</o:Revision>
+  <o:TotalTime>15</o:TotalTime>
+  <o:Created>2010-04-27T01:49:00Z</o:Created>
+  <o:LastSaved>2010-05-06T02:53:00Z</o:LastSaved>
+  <o:Pages>1</o:Pages>
+  <o:Words>773</o:Words>
+  <o:Characters>4410</o:Characters>
+  <o:Company>University of Sydney - School of IT</o:Company>
+  <o:Lines>36</o:Lines>
+  <o:Paragraphs>10</o:Paragraphs>
+  <o:CharactersWithSpaces>5173</o:CharactersWithSpaces>
+  <o:Version>11.9999</o:Version>
+ </o:DocumentProperties>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:WordDocument>
+  <w:Zoom>BestFit</w:Zoom>
+  <w:ValidateAgainstSchemas/>
+  <w:SaveIfXMLInvalid>false</w:SaveIfXMLInvalid>
+  <w:IgnoreMixedContent>false</w:IgnoreMixedContent>
+  <w:AlwaysShowPlaceholderText>false</w:AlwaysShowPlaceholderText>
+  <w:BrowserLevel>MicrosoftInternetExplorer4</w:BrowserLevel>
+ </w:WordDocument>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:LatentStyles DefLockedState="false" LatentStyleCount="156">
+ </w:LatentStyles>
+</xml><![endif]-->
+<link rel="Stylesheet" type="text/css" media="all" href="./Operating Systems - Exercise 8 - Round Robin Dispatcher_files/sans.css">
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:"Script MT Bold";
+	panose-1:3 4 6 2 4 6 7 8 9 4;
+	mso-font-charset:0;
+	mso-generic-font-family:script;
+	mso-font-pitch:variable;
+	mso-font-signature:3 0 0 0 1 0;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-parent:"";
+	margin:0cm;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+h2
+	{mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	mso-outline-level:2;
+	font-size:18.0pt;
+	font-weight:bold;}
+h3
+	{mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	mso-outline-level:3;
+	font-size:18.0pt;}
+a:link, span.MsoHyperlink
+	{color:navy;
+	text-decoration:underline;
+	text-underline:single;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:blue;
+	text-decoration:underline;
+	text-underline:single;}
+p
+	{mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	font-size:13.5pt;
+	mso-fareast-font-family:"Times New Roman";}
+code
+	{mso-fareast-font-family:"Times New Roman";}
+pre
+	{margin:0cm;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt;
+	font-size:13.5pt;
+	mso-fareast-font-family:"Times New Roman";
+	font-weight:bold;}
+tt
+	{mso-ansi-font-size:13.5pt;
+	mso-bidi-font-size:13.5pt;
+	mso-fareast-font-family:"Times New Roman";}
+p.script, li.script, div.script
+	{mso-style-name:script;
+	mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	font-size:13.5pt;
+	mso-fareast-font-family:"Times New Roman";}
+p.tinytext, li.tinytext, div.tinytext
+	{mso-style-name:tinytext;
+	mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	mso-fareast-font-family:"Times New Roman";}
+p.code, li.code, div.code
+	{mso-style-name:code;
+	mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	font-size:13.5pt;
+	mso-fareast-font-family:"Times New Roman";
+	font-weight:bold;}
+p.footertext, li.footertext, div.footertext
+	{mso-style-name:footertext;
+	mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	font-size:13.5pt;
+	mso-fareast-font-family:"Times New Roman";}
+p.unlink, li.unlink, div.unlink
+	{mso-style-name:unlink;
+	mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	font-size:13.5pt;
+	mso-fareast-font-family:"Times New Roman";}
+p.topred, li.topred, div.topred
+	{mso-style-name:topred;
+	mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	font-size:13.5pt;
+	mso-fareast-font-family:"Times New Roman";}
+p.set10pt, li.set10pt, div.set10pt
+	{mso-style-name:set10pt;
+	mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	mso-fareast-font-family:"Times New Roman";}
+p.super, li.super, div.super
+	{mso-style-name:super;
+	mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	mso-fareast-font-family:"Times New Roman";}
+p.sub, li.sub, div.sub
+	{mso-style-name:sub;
+	mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	mso-fareast-font-family:"Times New Roman";}
+p.bigo, li.bigo, div.bigo
+	{mso-style-name:bigo;
+	mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	font-size:18.0pt;
+	mso-fareast-font-family:"Times New Roman";
+	font-weight:bold;
+	font-style:italic;}
+p.justify, li.justify, div.justify
+	{mso-style-name:justify;
+	mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	text-align:justify;
+	mso-pagination:widow-orphan;
+	font-size:13.5pt;
+	mso-fareast-font-family:"Times New Roman";}
+p.red, li.red, div.red
+	{mso-style-name:red;
+	mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	font-size:13.5pt;
+	mso-fareast-font-family:"Times New Roman";}
+span.code1
+	{mso-style-name:code1;
+	mso-ansi-font-size:13.5pt;
+	mso-bidi-font-size:13.5pt;
+	font-family:"Courier New";
+	mso-ascii-font-family:"Courier New";
+	mso-hansi-font-family:"Courier New";
+	mso-bidi-font-family:"Courier New";
+	color:#CC00CC;
+	font-weight:bold;}
+@page Section1
+	{size:595.3pt 841.9pt;
+	margin:72.0pt 90.0pt 72.0pt 90.0pt;
+	mso-header-margin:35.4pt;
+	mso-footer-margin:35.4pt;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;}
+ /* List Definitions */
+ @list l0
+	{mso-list-id:1419252855;
+	mso-list-template-ids:-1440347368;}
+@list l0:level1
+	{mso-level-tab-stop:36.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l0:level2
+	{mso-level-number-format:roman-lower;
+	mso-level-tab-stop:72.0pt;
+	mso-level-number-position:right;
+	text-indent:-18.0pt;}
+@list l0:level3
+	{mso-level-number-format:alpha-lower;
+	mso-level-tab-stop:108.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l0:level4
+	{mso-level-number-format:alpha-upper;
+	mso-level-tab-stop:144.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l0:level5
+	{mso-level-tab-stop:180.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l0:level6
+	{mso-level-tab-stop:216.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l0:level7
+	{mso-level-tab-stop:252.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l0:level8
+	{mso-level-tab-stop:288.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l0:level9
+	{mso-level-tab-stop:324.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+ol
+	{margin-bottom:0cm;}
+ul
+	{margin-bottom:0cm;}
+-->
+</style>
+<!--[if gte mso 10]>
+<style>
+ /* Style Definitions */
+ table.MsoNormalTable
+	{mso-style-name:"Table Normal";
+	mso-tstyle-rowband-size:0;
+	mso-tstyle-colband-size:0;
+	mso-style-noshow:yes;
+	mso-style-parent:"";
+	mso-padding-alt:0cm 5.4pt 0cm 5.4pt;
+	mso-para-margin:0cm;
+	mso-para-margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:"Times New Roman";
+	mso-ansi-language:#0400;
+	mso-fareast-language:#0400;
+	mso-bidi-language:#0400;}
+</style>
+<![endif]--><!-- #BeginEditable "doctitle" --><!-- #EndEditable -->
+<meta name="DC.Creator" content="Dr Ian G Graham, Griffith University, Gold Coast, Queensland, Australia">
+<meta name="DC.Date.created" content="2003-12-01">
+<meta name="DC.Title" content="Exercise/Tutorial Page">
+<meta name="DC.Subject" content="Operating Systems; Instructor resource; Projects; Exercises">
+<meta name="DC.Description" content="This page contains exercises for the instructors resource supporting the text book: Operating Systems by William Stallings, 5th edition, Prentice-Hall, 2004">
+<meta name="DC.Identifier" content="TBA">
+<meta name="DC.Publisher" content="Prentice Hall">
+<meta name="DC.Format" scheme="IMT" content="text/html">
+<meta name="DC.Language" scheme="RFC3066" content="en">
+<meta name="subject" content="Operating Systems - Exercises">
+<meta name="keywords" content="Operating Systems, instructor, project, exercise, reference">
+<meta name="robots" content="NOINDEX">
+<link rel="shortcut icon" href="http://rp-www.cs.usyd.edu.au/~comp3520/2012/Assgns/favicon.gif">
+<!--[if gte mso 9]><xml>
+ <o:shapedefaults v:ext="edit" spidmax="3074"/>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapelayout v:ext="edit">
+  <o:idmap v:ext="edit" data="1"/>
+ </o:shapelayout></xml><![endif]-->
+</head>
+
+<body bgcolor="white" lang="EN-AU" link="navy" vlink="blue" style="tab-interval:36.0pt" youdao="bind">
+
+<div class="Section1">
+
+<table class="MsoNormalTable" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100.0%;mso-cellspacing:0cm;mso-padding-alt:0cm 0cm 0cm 0cm">
+ <tbody><tr style="mso-yfti-irow:0;mso-yfti-firstrow:yes;mso-yfti-lastrow:yes">
+  <td width="23" style="width:17.25pt;padding:0cm 0cm 0cm 0cm">
+  <p class="MsoNormal"><span style="font-size:13.5pt;font-family:Arial;
+  color:black"><a href="http://rp-www.cs.usyd.edu.au/~comp3520/2012/Assgns/index.html"></a><o:p></o:p></span></p>
+  </td>
+  <td width="100%" style="width:100.0%;padding:0cm 0cm 0cm 0cm"><!-- #BeginLibraryItem "/Library/DividingLine.lbi" -->
+  <p class="MsoNormal"><a name="top"></a><span style="font-size:13.5pt;font-family:
+  Arial;color:black"><img border="0" width="721" height="17" id="_x0000_i1025" src="./Operating Systems - Exercise 8 - Round Robin Dispatcher_files/red.gif"><o:p></o:p></span></p>
+  </td>
+ </tr>
+<!-- #EndLibraryItem -->
+</tbody></table>
+
+<h1 align="center" style="text-align:center"><span style="color:black">COMP3520
+Operating System Internals - Exercises<!-- #EndLibraryItem --> <o:p></o:p></span></h1>
+
+<h2 align="center" style="text-align:center"><span style="color:black"><!-- #EndLibraryItem --><!-- #BeginEditable "heading" -->Exercise
+8 - Round Robin Dispatcher<o:p></o:p></span></h2>
+
+<!-- #EndEditable -->
+
+<div align="center">
+
+<table class="MsoNormalTable" border="0" cellspacing="0" cellpadding="0" width="95%" style="width:95.0%;mso-cellspacing:0cm;mso-padding-alt:0cm 0cm 0cm 0cm">
+ <tbody><tr style="mso-yfti-irow:0;mso-yfti-firstrow:yes;mso-yfti-lastrow:yes">
+  <td style="padding:0cm 0cm 0cm 0cm"><!-- #BeginEditable "body" -->
+  <p><span style="color:black">Having got the FCFS dispatcher going from last
+  week. We now need to develop a Round Robin dispatcher. Since the Feedback
+  dispatcher required for the low priority job streams described in Assignment
+  2 is essentially multiple Round Robin dispatcher queues, it makes sense to
+  walk before we can run.<o:p></o:p></span></p>
+  <p align="center" style="text-align:center"><span style="color:black"><img border="0" width="600" height="105" id="_x0000_i1026" src="./Operating Systems - Exercise 8 - Round Robin Dispatcher_files/rrq.gif" alt="round robin"><br>
+  <strong><span style="font-family:Arial">Round Robin Dispatcher (from
+  Stallings)</span></strong><o:p></o:p></span></p>
+  <p><span style="color:black">To suspend and restart processes as required by the
+  Round Robin dispatcher will require the use of the </span><span class="code1">SIGTSTP</span><span style="color:black"> and </span><span class="code1">SIGCONT</span><span style="color:black"> signals as well as </span><span class="code1">SIGINT</span><span style="color:black"> that we used for the FCFS dispatcher.(see below).<o:p></o:p></span></p>
+  <p align="center" style="text-align:center"><span style="color:black"><img border="0" width="590" height="80" id="_x0000_i1027" src="./Operating Systems - Exercise 8 - Round Robin Dispatcher_files/Ex8fig1.gif"><o:p></o:p></span></p>
+  <p><span style="color:black">To make the Round Robin dispatcher work in the
+  same way as described in Stallings Figure 9.5 (RR q=1) the logic should be:<o:p></o:p></span></p>
+  <blockquote style="margin-top:5.0pt;margin-bottom:5.0pt">
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:36.0pt;text-indent:-18.0pt;mso-list:l0 level1 lfo2;tab-stops:
+  list 36.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:
+  Arial;mso-fareast-font-family:Arial;color:black"><span style="mso-list:Ignore">1.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;font-family:Arial;color:black">Initialize
+  dispatcher queues (input queue and RR queue);<o:p></o:p></span></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:36.0pt;text-indent:-18.0pt;mso-list:l0 level1 lfo2;tab-stops:
+  list 36.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:
+  Arial;mso-fareast-font-family:Arial;color:black"><span style="mso-list:Ignore">2.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;font-family:Arial;color:black">Fill
+  input queue from dispatch list file;<o:p></o:p></span></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:36.0pt;text-indent:-18.0pt;mso-list:l0 level1 lfo2;tab-stops:
+  list 36.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:
+  Arial;mso-fareast-font-family:Arial;color:black"><span style="mso-list:Ignore">3.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;font-family:Arial;color:black">Start
+  dispatcher timer (</span></span><span class="code1"><span style="font-size:
+  13.5pt">dispatcher timer = 0</span></span><span style="font-size:13.5pt;
+  font-family:Arial;color:black">);<o:p></o:p></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:36.0pt;text-indent:-18.0pt;mso-list:l0 level1 lfo2;tab-stops:
+  list 36.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:
+  Arial;mso-fareast-font-family:Arial;color:black"><span style="mso-list:Ignore">4.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;font-family:Arial;color:black">While
+  there's anything in any of the queues or there is a currently running
+  process: <o:p></o:p></span></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:72.0pt;text-indent:-72.0pt;mso-text-indent-alt:-18.0pt;
+  mso-list:l0 level2 lfo2;tab-stops:list 72.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:Arial;mso-fareast-font-family:Arial;
+  color:black"><span style="mso-list:Ignore"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>i.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;
+  font-family:Arial;color:black">Unload any pending processes from the input
+  queue:<br>
+  While (</span></span><span class="code1"><span style="font-size:13.5pt">head-of-input-queue.arrival-time
+  &lt;= dispatcher timer</span></span><span style="font-size:13.5pt;font-family:
+  Arial;color:black">)<br>
+  dequeue process from input queue and enqueue on RR queue;<o:p></o:p></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:72.0pt;text-indent:-72.0pt;mso-text-indent-alt:-18.0pt;
+  mso-list:l0 level2 lfo2;tab-stops:list 72.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:Arial;mso-fareast-font-family:Arial;
+  color:black"><span style="mso-list:Ignore"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>ii.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;
+  font-family:Arial;color:black">If a process is currently running: <o:p></o:p></span></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:108.0pt;text-indent:-18.0pt;mso-list:l0 level3 lfo2;tab-stops:
+  list 108.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:
+  Arial;mso-fareast-font-family:Arial;color:black"><span style="mso-list:Ignore">a.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;font-family:Arial;color:black">Decrement
+  process </span></span><span class="code1"><span style="font-size:13.5pt">remainingcputime</span></span><span style="font-size:13.5pt;font-family:Arial;color:black">;<o:p></o:p></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:108.0pt;text-indent:-18.0pt;mso-list:l0 level3 lfo2;tab-stops:
+  list 108.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:
+  Arial;mso-fareast-font-family:Arial;color:black"><span style="mso-list:Ignore">b.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;font-family:Arial;color:black">If times
+  up: <o:p></o:p></span></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:144.0pt;text-indent:-18.0pt;mso-list:l0 level4 lfo2;tab-stops:
+  list 144.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:
+  Arial;mso-fareast-font-family:Arial;color:black"><span style="mso-list:Ignore">A.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp; </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;font-family:Arial;color:black">Send </span></span><span class="code1"><span style="font-size:13.5pt">SIGINT</span></span><span style="font-size:13.5pt;font-family:Arial;color:black"> to the process to
+  terminate it; <o:p></o:p></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:144.0pt;text-indent:-18.0pt;mso-list:l0 level4 lfo2;tab-stops:
+  list 144.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:
+  Arial;mso-fareast-font-family:Arial;color:black"><span style="mso-list:Ignore">B.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp; </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;font-family:Arial;color:black">Free up
+  process structure memory;<o:p></o:p></span></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:108.0pt;text-indent:-18.0pt;mso-list:l0 level3 lfo2;tab-stops:
+  list 108.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:
+  Arial;mso-fareast-font-family:Arial;color:black"><span style="mso-list:Ignore">c.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;font-family:Arial;color:black">else if
+  other processes are waiting in RR queue: <o:p></o:p></span></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:144.0pt;text-indent:-18.0pt;mso-list:l0 level4 lfo2;tab-stops:
+  list 144.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:
+  Arial;mso-fareast-font-family:Arial;color:black"><span style="mso-list:Ignore">A.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp; </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;font-family:Arial;color:black">Send </span></span><span class="code1"><span style="font-size:13.5pt">SIGTSTP</span></span><span style="font-size:13.5pt;font-family:Arial;color:black"> to suspend it;<o:p></o:p></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:144.0pt;text-indent:-18.0pt;mso-list:l0 level4 lfo2;tab-stops:
+  list 144.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:
+  Arial;mso-fareast-font-family:Arial;color:black"><span style="mso-list:Ignore">B.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp; </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;font-family:Arial;color:black">Enqueue
+  it back on RR queue;<o:p></o:p></span></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:72.0pt;text-indent:-72.0pt;mso-text-indent-alt:-18.0pt;
+  mso-list:l0 level2 lfo2;tab-stops:list 72.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:Arial;mso-fareast-font-family:Arial;
+  color:black"><span style="mso-list:Ignore"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>iii.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;
+  font-family:Arial;color:black">If no process currently running &amp;&amp; RR
+  queue is not empty: <o:p></o:p></span></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:108.0pt;text-indent:-18.0pt;mso-list:l0 level3 lfo2;tab-stops:
+  list 108.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:
+  Arial;mso-fareast-font-family:Arial;color:black"><span style="mso-list:Ignore">a.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;font-family:Arial;color:black">Dequeue
+  process from RR queue<o:p></o:p></span></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:108.0pt;text-indent:-18.0pt;mso-list:l0 level3 lfo2;tab-stops:
+  list 108.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:
+  Arial;mso-fareast-font-family:Arial;color:black"><span style="mso-list:Ignore">b.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;font-family:Arial;color:black">If
+  already started but suspended, restart it (send </span></span><span class="code1"><span style="font-size:13.5pt">SIGCONT</span></span><span style="font-size:13.5pt;font-family:Arial;color:black"> to it)<br>
+  else start it (</span><span class="code1"><span style="font-size:13.5pt">fork</span></span><span style="font-size:13.5pt;font-family:Arial;color:black"> &amp; </span><span class="code1"><span style="font-size:13.5pt">exec</span></span><span style="font-size:13.5pt;font-family:Arial;color:black">)<o:p></o:p></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:108.0pt;text-indent:-18.0pt;mso-list:l0 level3 lfo2;tab-stops:
+  list 108.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:
+  Arial;mso-fareast-font-family:Arial;color:black"><span style="mso-list:Ignore">c.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;font-family:Arial;color:black">Set it
+  as currently running process;<o:p></o:p></span></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:72.0pt;text-indent:-72.0pt;mso-text-indent-alt:-18.0pt;
+  mso-list:l0 level2 lfo2;tab-stops:list 72.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:Arial;mso-fareast-font-family:Arial;
+  color:black"><span style="mso-list:Ignore"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>iv.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span></span></span><!--[endif]--><span dir="LTR"><span class="code1"><span style="font-size:13.5pt">sleep</span></span></span><span style="font-size:
+  13.5pt;font-family:Arial;color:black"> for one second;<o:p></o:p></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:72.0pt;text-indent:-72.0pt;mso-text-indent-alt:-18.0pt;
+  mso-list:l0 level2 lfo2;tab-stops:list 72.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:Arial;mso-fareast-font-family:Arial;
+  color:black"><span style="mso-list:Ignore"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>v.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;
+  font-family:Arial;color:black">Increment dispatcher timer;<o:p></o:p></span></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:72.0pt;text-indent:-72.0pt;mso-text-indent-alt:-18.0pt;
+  mso-list:l0 level2 lfo2;tab-stops:list 72.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:Arial;mso-fareast-font-family:Arial;
+  color:black"><span style="mso-list:Ignore"><span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>vi.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;
+  font-family:Arial;color:black">Go back to 4.<o:p></o:p></span></span></p>
+  <p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+  margin-left:36.0pt;text-indent:-18.0pt;mso-list:l0 level1 lfo2;tab-stops:
+  list 36.0pt"><!--[if !supportLists]--><span style="font-size:13.5pt;font-family:
+  Arial;mso-fareast-font-family:Arial;color:black"><span style="mso-list:Ignore">5.<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><!--[endif]--><span dir="LTR"><span style="font-size:13.5pt;font-family:Arial;color:black">Exit. <o:p></o:p></span></span></p>
+  </blockquote>
+  <p><span style="color:black">or something like that!<o:p></o:p></span></p>
+  <p><span style="color:black">Try this with the following job list (<a href="rr.txt" target="_blank">rr.txt</a>) with a quantum of 1 sec:<o:p></o:p></span></p>
+  <blockquote style="margin-top:5.0pt;margin-bottom:5.0pt">
+  <p class="code">0, 3, 3, 64, 0, 0, 0, 0<br>
+  2, 3, 6, 64, 0, 0, 0, 0<br>
+  4, 3, 4, 64, 0, 0, 0, 0<br>
+  6, 3, 5, 64, 0, 0, 0, 0<br>
+  8, 3, 2, 64, 0, 0, 0, 0</p>
+  </blockquote>
+  <p><span style="color:black">This should produce the sequence shown in
+  Stallings Figure 9.5 (RR q=1):<o:p></o:p></span></p>
+  <p align="center" style="text-align:center"><span style="color:black"><img border="0" width="600" height="144" id="_x0000_i1028" src="./Operating Systems - Exercise 8 - Round Robin Dispatcher_files/rr.gif" alt="round robin"><br>
+  <strong><span style="font-family:Arial">Round Robin Dispatcher Operation
+  (from Stallings fig 9.5)</span></strong><o:p></o:p></span></p>
+  <h3 align="center" style="text-align:center"><span style="color:black">Signals<o:p></o:p></span></h3>
+  <p><span style="color:black">Signals provide one way of communicating with
+  and controlling processes. A standard process has 'handlers' to field all the
+  UNIX/POSIX signals. The default action of these handlers is sometimes to do
+  nothing, or, for others to suspend or terminate the process with or without a
+  core dump etc.<o:p></o:p></span></p>
+  <p><span style="color:black">The program in </span><span class="code1">sigtrap.c</span><span style="color:black"> is an example of a program that traps some of the major
+  process control signals and reports them on the terminal. This is in fact the
+  </span><span class="code1">process</span><span style="color:black"> process
+  that is to be executed by your dispatcher for Assignment 2.<o:p></o:p></span></p>
+  <p><span class="code1">sigtrap</span><span style="color:black"> (&amp; </span><span class="code1">process</span><span style="color:black">) is similar to </span><span class="code1">sleepy</span><span style="color:black"> in that it takes a
+  command line argument to signify how many ticks it should tick. However, when
+  </span><span class="code1">exec</span><span style="color:black">'ed with no
+  arguments (as for the assignment) it will 'tick' for a maximum of 20 seconds.<o:p></o:p></span></p>
+  <p><span style="color:black">If you execute it as </span><span class="code1">sigtrap
+  1000</span><span style="color:black">, and then apply the standard </span><span class="code1">tcsh</span><span style="color:black"> job control commands of </span><span class="code1">^Z</span><span style="color:black">, </span><span class="code1">fg</span><span style="color:black">, </span><span class="code1">^Z</span><span style="color:black">, </span><span class="code1">kill %1</span><span style="color:black">, etc you will get some idea of the signals that the
+  shell is passing to it's </span><span class="code1">exec</span><span style="color:black">ed children.<o:p></o:p></span></p>
+  <p><span style="color:black">If you start up another terminal, you can pass
+  your own signals to the </span><span class="code1">sigtrap</span><span style="color:black"> process by using the system utility </span><span class="code1">kill</span><span style="color:black">. Again if you start up </span><span class="code1">sigtrap 1000</span><span style="color:black"> and it reports a
+  process ID of </span><span class="code1">nnnnn</span><span style="color:black">,
+  then try the command lines:<o:p></o:p></span></p>
+  <blockquote style="margin-top:5.0pt;margin-bottom:5.0pt">
+  <p class="code">kill -TSTP nnnnn<br>
+  kill -CONT nnnnn<br>
+  kill -INT nnnnn</p>
+  </blockquote>
+  <p><span style="color:black">while observing the terminal window running the </span><span class="code1">sigtrap</span><span style="color:black"> process.<o:p></o:p></span></p>
+  <p><span style="color:black">You can achieve the same effect inside a process
+  that has forked </span><span class="code1">sigtrap</span><span style="color:black"> as a child:<o:p></o:p></span></p>
+  <blockquote style="margin-top:5.0pt;margin-bottom:5.0pt">
+  <p class="code">#include &lt;sys/types.h&gt;<br>
+  #include &lt;signal.h&gt;<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;...<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;child_pid = fork();<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;...<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;sleep(1);<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;kill(child_pid, SIGTSTP);<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;sleep(1);<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;kill(child_pid, SIGCONT); <br>
+  &nbsp;&nbsp;&nbsp;&nbsp;sleep(1);<br>
+  &nbsp;&nbsp;&nbsp;&nbsp;kill(child_pid, SIGINT); </p>
+  </blockquote>
+  <p><span style="color:black">It is these last three signals we should be
+  using for process control in the HOST dispatcher.<o:p></o:p></span></p>
+  <p><span style="color:black">Code should be in 'straight' C.<o:p></o:p></span></p>
+<!-- #EndEditable -->
+  <p><span style="color:#AF0000">Always use </span><span class="code1">nice</span><span style="color:#AF0000"> to execute your test programs at lower priority to ensure
+  they do not inconvenience other users if they go 'haywire'. e.g.:<br>
+  &nbsp;<br>
+  </span><span class="code1">&nbsp;&nbsp;&nbsp;&gt;nice a.out</span><span style="color:#AF0000"> </span><span style="color:black"><o:p></o:p></span></p>
+  <p><span style="font-size:10.0pt;color:black"><!-- #BeginEditable "Acknowledgement" --><!-- #BeginLibraryItem "/Library/Acknowledge.lbi" -->The
+  descriptions of the system functions above are drawn from sources that
+  include </span><code><span style="font-size:10.0pt">man</span></code><span style="font-size:10.0pt;color:black">uals on the Sun Solaris system and the
+  MAC OS X Darwin/BDS system, and also from 'Advanced Programming in the UNIX
+  Environment', W. Richard Stevens, Addison-Wesley, 1993.</span><span style="color:black"><o:p></o:p></span></p>
+  </td>
+ </tr>
+</tbody></table>
+
+</div>
+
+<p class="MsoNormal" align="center" style="text-align:center"><span style="font-size:13.5pt;font-family:Arial;color:black;display:none;mso-hide:
+all"><o:p>&nbsp;</o:p></span></p>
+
+<!-- #BeginLibraryItem "/Library/DividingLineHome.lbi" -->
+
+<div align="center">
+
+<table class="MsoNormalTable" border="0" cellspacing="0" cellpadding="0" width="100%" style="width:100.0%;mso-cellspacing:0cm;mso-padding-alt:0cm 0cm 0cm 0cm">
+ <tbody><tr style="mso-yfti-irow:0;mso-yfti-firstrow:yes;mso-yfti-lastrow:yes">
+  <td width="23" style="width:17.25pt;padding:0cm 0cm 0cm 0cm">
+  <p class="MsoNormal"><span style="font-size:13.5pt;font-family:Arial;
+  color:black"><a href="http://rp-www.cs.usyd.edu.au/~comp3520/2012/Assgns/index.html"></a><o:p></o:p></span></p>
+  </td>
+  <td width="100%" style="width:100.0%;padding:0cm 0cm 0cm 0cm"><!-- #BeginLibraryItem "/Library/DividingLine.lbi" -->
+  <p class="MsoNormal"><span style="font-size:13.5pt;font-family:Arial;
+  color:black"><img border="0" width="721" height="17" id="_x0000_i1029" src="./Operating Systems - Exercise 8 - Round Robin Dispatcher_files/red.gif"><o:p></o:p></span></p>
+  </td>
+<!-- #EndLibraryItem -->
+  <td width="20" style="width:15.0pt;padding:0cm 0cm 0cm 0cm"><!-- #BeginLibraryItem "/Library/GoTop.lbi" -->
+  <p class="MsoNormal"><span style="font-size:13.5pt;font-family:Arial;
+  color:black"><a href="http://rp-www.cs.usyd.edu.au/~comp3520/2012/Assgns/exercise08.html#top"></a></span><!--[if gte vml 1]><v:shapetype id="_x0000_t75"
+   coordsize="21600,21600" o:spt="75" o:preferrelative="t" path="m@4@5l@4@11@9@11@9@5xe"
+   filled="f" stroked="f">
+   <v:stroke joinstyle="miter"/>
+   <v:formulas>
+    <v:f eqn="if lineDrawn pixelLineWidth 0"/>
+    <v:f eqn="sum @0 1 0"/>
+    <v:f eqn="sum 0 0 @1"/>
+    <v:f eqn="prod @2 1 2"/>
+    <v:f eqn="prod @3 21600 pixelWidth"/>
+    <v:f eqn="prod @3 21600 pixelHeight"/>
+    <v:f eqn="sum @0 0 1"/>
+    <v:f eqn="prod @6 1 2"/>
+    <v:f eqn="prod @7 21600 pixelWidth"/>
+    <v:f eqn="sum @8 21600 0"/>
+    <v:f eqn="prod @7 21600 pixelHeight"/>
+    <v:f eqn="sum @10 21600 0"/>
+   </v:formulas>
+   <v:path o:extrusionok="f" gradientshapeok="t" o:connecttype="rect"/>
+   <o:lock v:ext="edit" aspectratio="t"/>
+  </v:shapetype><v:shape id="_x0000_s1028" type="#_x0000_t75" alt="top"
+   href="#top" style='position:absolute;margin-left:-50pt;margin-top:0;width:15pt;
+   height:12.75pt;z-index:1;mso-wrap-distance-left:0;mso-wrap-distance-right:0;
+   mso-position-horizontal:right;mso-position-horizontal-relative:text;
+   mso-position-vertical-relative:line' o:allowoverlap="f" o:button="t">
+   <v:imagedata src="images/gotop.gif"/>
+   <w:wrap type="square"/>
+  </v:shape><![endif]--><!--[if !vml]--><a href="http://rp-www.cs.usyd.edu.au/~comp3520/2012/Assgns/exercise08.html#top"><img border="0" width="20" height="17" src="./Operating Systems - Exercise 8 - Round Robin Dispatcher_files/gotop.gif" align="right" alt="top" v:shapes="_x0000_s1028"></a><!--[endif]--><span style="color:black"><a href="http://rp-www.cs.usyd.edu.au/~comp3520/2012/Assgns/exercise08.html#top"></a></span><span style="font-size:13.5pt;
+  font-family:Arial;color:black;mso-no-proof:yes"><a href="http://rp-www.cs.usyd.edu.au/~comp3520/2012/Assgns/exercise08.html#top"></a></span><span style="font-size:13.5pt;font-family:Arial;color:black"><o:p></o:p></span></p>
+  </td>
+ </tr>
+<!-- #EndLibraryItem -->
+</tbody></table>
+
+</div>
+
+<p><!-- #BeginLibraryItem "/Library/UseBy.lbi" --><i><span style="font-size:
+10.0pt;font-family:&quot;Times New Roman&quot;;color:black"><!-- #EndLibraryItem -->For
+use only by students and instructors using the supplementary material available
+with the text book: "Operating Systems - Internals and Design
+Principles", William Stallings, Prentice Hall, 5th Edition, 2004. Not to
+be printed out or copied by any other persons or used for any other purpose
+without written permission of the author(s).</span></i><!-- #EndLibraryItem --><span style="color:black"> <o:p></o:p></span></p>
+
+<p align="right" style="text-align:right"><!-- #BeginLibraryItem "/Library/copyright.lbi" --><i><span style="font-size:10.0pt;font-family:&quot;Times New Roman&quot;;color:black">©</span></i><span style="color:black"> <o:p></o:p></span></p>
+
+</div>
+
+<!-- #EndLibraryItem -->
+
+
+<!-- #EndTemplate -->
+
+</body></html>
